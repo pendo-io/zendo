@@ -1,0 +1,22 @@
+{
+  "name": "zendo",
+  "version": "0.1.0",
+  "private": true,
+  "devDependencies": {
+    "react-scripts": "1.0.7"
+  },
+  "dependencies": {
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4",
+    "react-helmet": "4",
+    "react-router-dom": "^4.1.1",
+    "react-snapshot": "^1.1.0",
+    "styled-components": "^2.0.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build && mkdir ./zendesk-app/assets/zendo && cp -r ./build/* ./zendesk-app/assets/zendo",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}

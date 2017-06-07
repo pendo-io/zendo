@@ -1,0 +1,17 @@
+{
+  "name": "Pendo Test",
+  "author": {
+    "name": "brec-c",
+    "email": "brec@pendo.io",
+    "url": ""
+  },
+  "defaultLocale": "en",
+  "private": true,
+  "location": {
+    "support": {
+      "ticket_sidebar": "assets/zendo/index.html"
+    }
+  },
+  "version": "1.0",
+  "frameworkVersion": "2.0"
+}
