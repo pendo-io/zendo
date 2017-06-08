@@ -20,6 +20,5 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-zendesk-app/assets/build/**
-
+zendesk-app/assets/**
 yarn.lock
