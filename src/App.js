@@ -1,10 +1,19 @@
-import React, { Component } from 'react';
+import React from 'react';
+import recycle from 'recycle';
 import './App.css';
+import Header from './Header';
+// import Rx from 'rxjs';
 
-class App extends Component {
-  render() {
+function findUser() {
+  console.log("called findUser");
+}
+
+const App = recycle({
+
+  view (props, state) {
     return (
       <div className="App">
+        <Header findUser={findUser}></Header>
         <p className="App-intro">
           What do you get when you cross Zendesk with Pendo?
         </p>
@@ -18,6 +27,6 @@ class App extends Component {
       </div>
     );
   }
-}
+});
 
 export default App;

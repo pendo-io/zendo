@@ -16,7 +16,13 @@ export function start() {
 
 export function getEmail() {
   return client.get(['ticket.requester.email']).then((data) => {
-    console.log(`Found ticket.requester.name to be -> ${JSON.stringify(data)}`)
+    return data['ticket.requester.email'];
+  });
+}
+
+export function getRequester() {
+  return client.get(['ticket.requester']).then((data) => {
+    return data['ticket.requester'];
   });
 }
 
