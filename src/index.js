@@ -1,22 +1,15 @@
 import React from 'react';
 import { render } from 'react-dom';
 import App from './App';
-import {start, /*getEmail, getMetadata, getContext, getRequester*/} from './ZAFClient';
+import ZAF from './sources/ZAFClient';
+import Pendo from './sources/PendoClient';
+import Rx from 'rxjs';
 import './index.css';
 
-start();
+ZAF.start();
 
-render(
-  <App />,
-  document.getElementById('root')
-);
+Rx.Observable.fromPromise(ZAF.getMetadata())
+  .map(obj => obj.settings.token)
+  .subscribe(token => Pendo.init(token));
 
-
-// getEmail().then((email) => {
-//   console.log(`got email: ${email}`);
-// });
-// getMetadata();
-// getContext();
-// getRequester().then((obj) => {
-//   console.log(obj);
-// })
+render( <App />, document.getElementById('root') );

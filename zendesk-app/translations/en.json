@@ -1,7 +1,10 @@
 {
   "app": {
     "description": "Play the famous zen tunes in your help desk.",
-    "name": "Buddha Machine"
+    "name": "Buddha Machine",
+    "parameters": {
+      "token": { "label": "Pendo Integration Token" }
+    }
   },
   "loading": "Welcome to this Sample App",
   "fetch": {

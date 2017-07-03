@@ -1,7 +1,10 @@
 import React/*, { Component }*/ from 'react';
 import recycle from 'recycle';
-import {Observable} from 'rxjs/Observable';
-import {getRequester} from './ZAFClient';
+import Rx from 'rxjs';
+// import {Observable} from 'rxjs/Observable';
+// import 'rxjs/add/observable/fromPromise';
+// import 'rxjs/add/observable/withLatestFrom';
+import ZAF from './sources/ZAFClient';
 
 const Header = recycle({
   initialState: {
@@ -19,7 +22,7 @@ const Header = recycle({
           return state;
         }),
 
-      Observable.fromPromise(getRequester())
+      Rx.Observable.fromPromise(ZAF.getRequester())
         .reducer((state, requester) => {
           state.avatarUrl = requester.avatarUrl;
           state.name = requester.name;

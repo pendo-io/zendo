@@ -2,7 +2,6 @@ import React from 'react';
 import recycle from 'recycle';
 import './App.css';
 import Header from './Header';
-// import Rx from 'rxjs';
 
 function findUser() {
   console.log("called findUser");
