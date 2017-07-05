@@ -4,7 +4,9 @@ import Rx from 'rxjs';
 // import {Observable} from 'rxjs/Observable';
 // import 'rxjs/add/observable/fromPromise';
 // import 'rxjs/add/observable/withLatestFrom';
-import ZAF from './sources/ZAFClient';
+// import ZAF from './sources/ZAFClient';
+
+import Streams from './Streams'
 
 const Header = recycle({
   initialState: {
@@ -22,13 +24,33 @@ const Header = recycle({
           return state;
         }),
 
-      Rx.Observable.fromPromise(ZAF.getRequester())
-        .reducer((state, requester) => {
-          state.avatarUrl = requester.avatarUrl;
-          state.name = requester.name;
-          state.organizations = requester.organizations.map((org) => org.name );
+      Streams.getAvatarUrlStream()
+        .reducer( (state, aus) => {
+          state.avatarUrl = aus;
+          return state;
+        }),
+
+      Streams.getVisitorStream()
+        .reducer( (state, pendoVisitor) => {
+          state.email = pendoVisitor.id;
+          state.name = state.email;
+          return state;
+        }),
+
+      Streams.getAccountStream()
+        .reducer( (state, pendoAccount) => {
+          state.organizations = [pendoAccount.name || pendoAccount.id];
           return state;
         })
+      // Rx.Observable.fromPromise(ZAF.getRequester())
+      //   .reducer((state, requester) => {
+      //     state.avatarUrl = requester.avatarUrl;
+      //     state.name = requester.name;
+      //     state.organizations = requester.organizations.map((org) => org.name );
+      //     return state;
+      //   })
+
+
     ]
   },
   effects (sources) {

@@ -1,46 +1,60 @@
-var client;
+import Rx from 'rxjs';
+
+const startStream = Rx.Observable.create( (observer) => {
+
+  /* eslint-disable no-undef */
+  const client = ZAFClient.init();
+
+  if (!client) {
+    observer.error("Failed to initialized ZAFClient");
+    observer.complete();
+  }
+
+  client.invoke('resize', {
+    width: '100%',
+    height: '400px'
+  });
+
+  observer.next(client);
+  observer.complete();
+});
 
 const ZAF = {
-  start() {
-      /* eslint-disable no-undef */
-      client = ZAFClient.init();
-      if (!client) {
-        console.log("Failed to initialized ZAFClient");
-        return;
-      }
-
-      client.invoke('resize', {
-        width: '100%',
-        height: '400px'
-      });
-
-      return client;
-  },
 
   getEmail() {
-    return client.get(['ticket.requester.email']).then((data) => {
-      return data['ticket.requester.email'];
-    });
+    return ZAF.getRequester().map( (requester) => requester.email );
   },
 
   getRequester() {
-    return client.get(['ticket.requester']).then((data) => {
-      return data['ticket.requester'];
-    });
+    return startStream.flatMap( (client) => {
+      return Rx.Observable.fromPromise(client.get(['ticket.requester']))
+    }).map( (data) => data['ticket.requester'] );
   },
 
   getMetadata() {
-    return client.metadata().then((md) => {
-      console.log(md);
-      return md;
+    return startStream.flatMap( (client) => {
+      return Rx.Observable.fromPromise(client.metadata())
     });
   },
 
   getContext() {
-    return client.context().then((context) => {
-      console.log(context);
+    return startStream.flatMap( (client) => {
+      return Rx.Observable.fromPromise(client.context())
     });
-  }
+  },
+
+  getApiToken () {
+    // return Rx.Observable.fromPromise(ZAF.getMetadata())
+    //   .reduce( (md) => md.settings.token );
+    return ZAF.getMetadata().map( (md) => md.settings.token );
+  },
+
+  // requestStream (options) {
+  //   return startStream.flatMap( (client) => {
+  //     return Rx.Observable.fromPromise( client.request(options) );
+  //   });
+  // }
+
 };
 
 export default ZAF;

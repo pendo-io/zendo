@@ -14,7 +14,8 @@
     "react-snapshot": "^1.1.0",
     "recycle": "^2.2.2",
     "rxjs": "^5.4.1",
-    "styled-components": "^2.0.0"
+    "styled-components": "^2.0.0",
+    "whatwg-fetch": "^2.0.3"
   },
   "scripts": {
     "start": "react-scripts start",
