@@ -42,15 +42,6 @@ const Header = recycle({
           state.organizations = [pendoAccount.name || pendoAccount.id];
           return state;
         })
-      // Rx.Observable.fromPromise(ZAF.getRequester())
-      //   .reducer((state, requester) => {
-      //     state.avatarUrl = requester.avatarUrl;
-      //     state.name = requester.name;
-      //     state.organizations = requester.organizations.map((org) => org.name );
-      //     return state;
-      //   })
-
-
     ]
   },
   effects (sources) {
