@@ -18,6 +18,7 @@ const Streams = {
     const TokenStream = ZAF.getApiToken();
     EmailStream.combineLatest(TokenStream, (email, token) => [email,token] )
       .flatMap( ([email, token]) => Pendo.findUserStream(email, token) )
+      .catch( (err) => Rx.Observable.of(err) )
       .subscribe(vSub);
 
     return vSub;
@@ -32,9 +33,13 @@ const Streams = {
     const TokenStream = ZAF.getApiToken();
     VisitorStream.combineLatest(TokenStream, (visitor, token) => [visitor, token] )
       .flatMap( ([visitor, token]) => {
-      // XXX fix this assumption that there will be an account id for the visitor
-      return Pendo.findAccountStream( visitor.accountIds[0], token );
-    }).subscribe(aSub);
+        if (!visitor || !visitor.accountIds.length)
+          return Rx.Observable.empty();
+
+        return Pendo.findAccountStream( visitor.accountIds[0], token );
+      })
+      .catch( err => Rx.Observable.of(err) )
+      .subscribe(aSub);
 
     return aSub;
   },

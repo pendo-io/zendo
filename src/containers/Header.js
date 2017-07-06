@@ -1,12 +1,8 @@
 import React/*, { Component }*/ from 'react';
 import recycle from 'recycle';
 import Rx from 'rxjs';
-// import {Observable} from 'rxjs/Observable';
-// import 'rxjs/add/observable/fromPromise';
-// import 'rxjs/add/observable/withLatestFrom';
-// import ZAF from './sources/ZAFClient';
 
-import Streams from './Streams'
+import Streams from '../Streams'
 
 const Header = recycle({
   initialState: {
@@ -62,7 +58,7 @@ const Header = recycle({
             from {state.organizations.join(', ')}
           </div>
         </h2>
-        <button className="btn-link">Click to change user</button>
+        {/*<button className="btn-link">Click to change user</button>*/}
       </div>
     );
   }
