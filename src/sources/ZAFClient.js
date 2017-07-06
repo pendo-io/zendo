@@ -12,7 +12,7 @@ const startStream = Rx.Observable.create( (observer) => {
 
   client.invoke('resize', {
     width: '100%',
-    height: '400px'
+    height: '800px'
   });
 
   observer.next(client);

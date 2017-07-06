@@ -10,13 +10,13 @@ const getFavItems = (items) => {
   return items;
 }
 
-const MDListContainer = recycle({
+const AccountMDContainer = recycle({
   initialState: {
     items: []
   },
   update (sources) {
     return [
-      Streams.getVisitorStream()
+      Streams.getAccountStream()
         .map( visitor => visitor.metadata )
         .reducer( (state, md) => {
           state.items = _.map(md, (v, k) => {
@@ -32,11 +32,11 @@ const MDListContainer = recycle({
   view (props, state) {
     return (
       <div className="md-list-container">
-        <label>{props.type}</label>
+        <label>Account</label>
         <MDList items={getFavItems(state.items)} />
       </div>
     )
   }
 });
 
-export default MDListContainer;
+export default AccountMDContainer;

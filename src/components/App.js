@@ -3,7 +3,8 @@ import { render } from 'react-dom';
 
 import '../styles/App.css';
 import Header from '../containers/Header';
-import MDListContainer from '../containers/MDListContainer'
+import VisitorMDContainer from '../containers/VisitorMDContainer';
+import AccountMDContainer from '../containers/AccountMDContainer';
 
 function findUser() {
   console.log("called findUser");
@@ -12,7 +13,8 @@ function findUser() {
 const App = () => (
   <div className="App">
     <Header findUser={findUser}></Header>
-    <MDListContainer type="visitor"/>
+    <VisitorMDContainer/>
+    <AccountMDContainer/>
   </div>
 );
 
