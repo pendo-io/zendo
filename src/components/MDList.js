@@ -10,7 +10,7 @@ const convertObjectToArray = (obj) => {
 };
 
 const MDList = ({items}) => (
-  <div>
+  <div className="md-list">
     {items.map( (group) =>
         <MDGroup
           name={group.name}

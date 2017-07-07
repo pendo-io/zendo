@@ -6,6 +6,8 @@ import _ from 'underscore';
 import Streams from '../Streams'
 import MDList from '../components/MDList';
 
+// import '../styles/MDListContainer.css';
+
 const getFavItems = (items) => {
   return items;
 }

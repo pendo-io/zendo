@@ -4,6 +4,8 @@ import Rx from 'rxjs';
 
 import Streams from '../Streams'
 
+// import '../styles/Header.css';
+
 const Header = recycle({
   initialState: {
     avatarUrl: '',

@@ -44,10 +44,8 @@ const ZAF = {
   },
 
   getApiToken () {
-    // return Rx.Observable.fromPromise(ZAF.getMetadata())
-    //   .reduce( (md) => md.settings.token );
     return ZAF.getMetadata().map( (md) => md.settings.token );
-  },
+  }
 
   // requestStream (options) {
   //   return startStream.flatMap( (client) => {
