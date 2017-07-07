@@ -1,0 +1,11 @@
+.md-item {
+  margin: 2px 0;
+}
+
+.md-item .key {
+  font-weight: bold;
+}
+
+.md-item .value {
+  margin-left: 20px;
+}

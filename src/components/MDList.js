@@ -3,22 +3,22 @@ import _ from 'underscore';
 
 import MDGroup from './MDGroup';
 
-const convertObjectToArray = (obj) => {
-  return _.map(obj, (v,k) => {
-    return {key: k, value: v}
-  })
+import '../styles/MDList.css';
+
+const isEditing = (items) => {
+  return _.any(items, (item) => item.isEditing);
 };
 
-const MDList = ({items}) => (
+const MDList = ({ items, onEdit, onSave }) => (
   <div className="md-list">
-    {items.map( (group) =>
+    {_.map(_.groupBy(items, 'group'), (group, name) =>
         <MDGroup
-          name={group.name}
-          items={convertObjectToArray(group.items)}
+          name={name}
+          items={group}
         />
     )}
-    <div className="edit">
-      <button>Edit</button>
+    <div className="footer">
+      <button onClick={() => isEditing(items) ? onSave() : onEdit()}>{isEditing(items) ? 'Save' : 'Edit'}</button>
     </div>
   </div>
 )

@@ -1,8 +1,9 @@
 import Rx from 'rxjs';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 
 import ZAF from './sources/ZAFClient';
 import Pendo from './sources/PendoClient';
+// import Storage from './sources/Storage';
 
 var vSub = null;
 var aSub = null;
@@ -46,6 +47,16 @@ const Streams = {
 
   getAvatarUrlStream () {
     return ZAF.getRequester().map( (reqstr) => reqstr.avatarUrl );
+  },
+
+  // TODO: implement real stream of filter data from some storage somewhere
+  getVisitorMetadataFilter () {
+    // return Storage.get('VisitorMetadataFilter').map((key) => { return {key} });
+    return Rx.Observable.of(['language', 'role', 'firstvisit', 'lastvisit', 'lastservername'].map((key) => { return {key} }));
+  },
+
+  getAccountMetadataFilter () {
+    return Rx.Observable.of(['name', 'lastvisit'].map((key) => { return {key} }));
   }
 
 };

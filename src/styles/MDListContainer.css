@@ -1,3 +1,11 @@
 .md-list-container {
   margin: 10px 0px;
+  border: 1px solid #ccc;
+  background-color: #efefef;
+  border-radius: 4px;
+  padding: 2px;
+}
+
+.md-list-container label {
+  font-weight: bold;
 }

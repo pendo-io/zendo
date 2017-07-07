@@ -1,6 +1,5 @@
 import React/*, { Component }*/ from 'react';
 import recycle from 'recycle';
-import Rx from 'rxjs';
 
 import Streams from '../Streams'
 
@@ -60,7 +59,8 @@ const Header = recycle({
             from {state.organizations.join(', ')}
           </div>
         </h2>
-        {/*<button className="btn-link">Click to change user</button>*/}
+        {/*This is how you make comments*/}
+        <button className="change-user">Change user</button>
       </div>
     );
   }

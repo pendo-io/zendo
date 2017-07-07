@@ -1,5 +1,4 @@
 import React from 'react';
-import { render } from 'react-dom';
 
 import '../styles/App.css';
 import Header from '../containers/Header';
@@ -14,8 +13,10 @@ function findUser() {
 const App = () => (
   <div className="App">
     <Header findUser={findUser}></Header>
-    <VisitorMDContainer/>
-    <AccountMDContainer/>
+    <div className="scroll-area">
+      <VisitorMDContainer/>
+      <AccountMDContainer/>
+    </div>
   </div>
 );
 
