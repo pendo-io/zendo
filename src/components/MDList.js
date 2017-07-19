@@ -1,11 +1,13 @@
 import React from 'react';
 import _ from 'underscore';
+import R from 'ramda';
 
 import MDGroup from './MDGroup';
 
 import '../styles/MDList.css';
 
 const isEditing = (items) => {
+  // return R.any(R.propEq('isEditing', true), items);
   return _.any(items, (item) => item.isEditing);
 };
 

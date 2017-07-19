@@ -12,6 +12,8 @@ function checkStatus(response) {
   }
 }
 
+// TODO: externalize URLs
+
 const Pendo = {
 
   findUserStream (email, token) {

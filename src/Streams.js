@@ -8,6 +8,18 @@ import Pendo from './sources/PendoClient';
 var vSub = null;
 var aSub = null;
 
+/*
+
+  What is wrong?  What should this be?
+
+  Thinking...
+
+  getVisitorStream -- want to get a visitor subject?
+   -- get a obsB for the api call
+   -- resolve to visitor, cache in subject?
+
+*/
+
 const Streams = {
 
   getVisitorStream () {

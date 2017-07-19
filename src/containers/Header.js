@@ -60,7 +60,7 @@ const Header = recycle({
           </div>
         </h2>
         {/*This is how you make comments*/}
-        <button className="change-user">Change user</button>
+        {/*<button className="change-user">Change user</button>*/}
       </div>
     );
   }
