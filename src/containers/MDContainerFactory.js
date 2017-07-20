@@ -1,34 +1,24 @@
 import React from 'react';
 import recycle from 'recycle';
-// import _ from 'underscore';
+import _ from 'underscore';
 import R from 'ramda';
 import MDList from '../components/MDList';
 
-const getVisibleItems = (items, filter, isEditing) => {
-  if (isEditing) {
-    return items.map((item) => {
-      item.isEditing = true;
-      item.isVisible = !!R.find(R.propEq('key', item.key))(filter);
-      // item.isVisible = !!_.findWhere(filter, {key: item.key});
-      return item;
-    });
-  }
+const getVisibleItems = R.pipe((items, filter, isEditing) => {
+    if (isEditing) {
+      return items.map((item) => {
+        item.isEditing = true;
+        item.isVisible = !!R.find(R.propEq('key', item.key))(filter);
+        return item;
+      });
+    }
 
-  return R.filter((item) => {
-      return R.find(R.propEq('key', item.key))(filter);
-    },
-    items
-  );
-
-  // return _.filter(items, (item) => {
-  //   return _.findWhere(filter, {key: item.key});
-  // });
-}
+    return R.filter((item) => R.find(R.propEq('key', item.key))(filter), items );
+  },
+  R.groupBy(R.prop('group'))
+);
 
 const factory = (type, metadataOb, metadataFilterOb) => {
-
-  metadataOb.subscribe(console.log);
-
   return recycle({
     initialState: {
       items: [],
@@ -69,6 +59,14 @@ const factory = (type, metadataOb, metadataFilterOb) => {
 
             state.items = R.flatten(ugh);
 
+            // console.log(`\nDEBUGGING for ${type}----------------------------------------------------`)
+            // const vItems = getVisibleItems(state.items, state.filter, state.isEditing);
+            // const gpd = R.groupBy(R.prop('group'), vItems);
+            // R.mapObjIndexed(console.log, gpd);
+            //
+            // const gpd2 = _.groupBy(vItems, 'group')
+            // _.map(gpd2, console.log );
+
             return state;
           })
       ]
@@ -78,7 +76,7 @@ const factory = (type, metadataOb, metadataFilterOb) => {
       return (
         <div className="md-list-container">
           <label>{label}</label>
-          <MDList items={getVisibleItems(state.items, state.filter, state.isEditing)} />
+          <MDList items={getVisibleItems(state.items, state.filter, state.isEditing)} isEditing={state.isEditing} />
         </div>
       )
     }
