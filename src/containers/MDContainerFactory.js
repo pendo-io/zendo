@@ -1,6 +1,5 @@
 import React from 'react';
 import recycle from 'recycle';
-import _ from 'underscore';
 import R from 'ramda';
 import MDList from '../components/MDList';
 
@@ -58,14 +57,6 @@ const factory = (type, metadataOb, metadataFilterOb) => {
             }, md));
 
             state.items = R.flatten(ugh);
-
-            // console.log(`\nDEBUGGING for ${type}----------------------------------------------------`)
-            // const vItems = getVisibleItems(state.items, state.filter, state.isEditing);
-            // const gpd = R.groupBy(R.prop('group'), vItems);
-            // R.mapObjIndexed(console.log, gpd);
-            //
-            // const gpd2 = _.groupBy(vItems, 'group')
-            // _.map(gpd2, console.log );
 
             return state;
           })
