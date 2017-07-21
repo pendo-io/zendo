@@ -3,10 +3,12 @@ import recycle from 'recycle';
 import R from 'ramda';
 import MDList from '../components/MDList';
 
+import Paper   from 'material-ui/Paper';
+import Subheader from "material-ui/Subheader";
+
 const getVisibleItems = R.pipe((items, filter, isEditing) => {
     if (isEditing) {
       return items.map((item) => {
-        item.isEditing = true;
         item.isVisible = !!R.find(R.propEq('key', item.key))(filter);
         return item;
       });
@@ -38,7 +40,7 @@ const factory = (type, metadataOb, metadataFilterOb) => {
           .reducer((state) => {
             state.isEditing = false;
 
-            state.items = R.map(R.omit(['isEditing', 'isVisible']), state.items);
+            // state.items = R.map(R.omit(['isEditing', 'isVisible']), state.items);
             return state;
           }),
 
@@ -65,10 +67,10 @@ const factory = (type, metadataOb, metadataFilterOb) => {
     view (props, state) {
       const label = type;
       return (
-        <div className="md-list-container">
-          <label>{label}</label>
+        <Paper zDepth={3} style={{margin: '5px 5px 15px'}}>
+          <Subheader>{label} Info</Subheader>
           <MDList items={getVisibleItems(state.items, state.filter, state.isEditing)} isEditing={state.isEditing} />
-        </div>
+        </Paper>
       )
     }
   });

@@ -2,10 +2,12 @@ import React from 'react';
 import {
   BrowserRouter as Router,
   Route,
-  Link,
+  NavLink,
   Redirect,
   Switch
 } from 'react-router-dom';
+
+import {Tabs, Tab} from 'material-ui/Tabs';
 
 import '../styles/App.css';
 import Header from '../containers/Header';
@@ -52,11 +54,11 @@ const App = () => (
     <Header findUser={findUser}></Header>
     <Router>
       <div>
-        <ul className='navigation-links'>
-          <li><Link to="/">Info</Link></li>
-          <li><Link to="/timeline">Timeline</Link></li>
-          <li><Link to="/settings">Settings</Link></li>
-        </ul>
+        <Tabs>
+          <Tab label="Info" containerElement={<NavLink to="/"/>} />
+          <Tab label="Timeline" containerElement={<NavLink to="/timeline"/>}/>
+          <Tab label="Settings" containerElement={<NavLink to="/settings"/>} />
+        </Tabs>
         <div className="scroll-area">
           <Switch>
             <Route exact path="/" component={Info} />

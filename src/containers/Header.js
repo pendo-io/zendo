@@ -1,7 +1,7 @@
 import React/*, { Component }*/ from 'react';
 import recycle from 'recycle';
-
-import Streams from '../Streams'
+import muiThemeable from 'material-ui/styles/muiThemeable';
+import Streams from '../Streams';
 
 import '../styles/Header.css';
 
@@ -29,8 +29,9 @@ const Header = recycle({
 
       Streams.getVisitorStream()
         .reducer( (state, pendoVisitor) => {
+          // add better way to get email
           state.email = pendoVisitor.id;
-          state.name = state.email;
+          state.name = pendoVisitor.displayName || state.email;
           return state;
         }),
 
@@ -51,7 +52,7 @@ const Header = recycle({
   },
   view (props, state) {
     return (
-      <div className="header">
+      <div className="header" style={{'background-color':props.muiTheme.palette.primary1Color}}>
         <img src={state.avatarUrl} alt="" height="40px" width="40px" />
         <h2>
           {state.name}
@@ -66,4 +67,4 @@ const Header = recycle({
   }
 })
 
-export default Header;
+export default muiThemeable()(Header);
