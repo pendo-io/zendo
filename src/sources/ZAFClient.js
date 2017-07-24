@@ -22,9 +22,7 @@ const zaf$ = new Rx.BehaviorSubject(initZAF());
 
 zaf$.subscribe(resize, (e) => console.error(e) );
 
-
 const ZAF = {
-
   getRequester() {
     return zaf$.flatMap( (client) => {
       return Rx.Observable.fromPromise(client.get(['ticket.requester']))
@@ -41,22 +39,19 @@ const ZAF = {
     });
   },
 
-  // getContext() {
-  //   return zafSubject.flatMap( (client) => {
-  //     return Rx.Observable.fromPromise(client.context())
-  //   });
-  // },
+  getContext() {
+    return zaf$.flatMap( (client) => {
+      return Rx.Observable.fromPromise(client.context())
+    });
+  },
+
+  getTicketId () {
+    return ZAF.getContext().map( (ctx) => ctx.ticketId );
+  },
 
   getApiToken () {
     return ZAF.getMetadata().map( (md) => md.settings.token );
   }
-
-  // requestStream (options) {
-  //   return startStream.flatMap( (client) => {
-  //     return Rx.Observable.fromPromise( client.request(options) );
-  //   });
-  // }
-
 };
 
 export default ZAF;

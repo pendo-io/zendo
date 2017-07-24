@@ -5,17 +5,16 @@ import '../styles/MDItem.css';
 import {ListItem} from 'material-ui/List';
 import Checkbox from 'material-ui/Checkbox';
 
-// const MDItemVisibility = ({item}) => {
-//   if (item.isEditing) {
-//     return <Checkbox checked={item.isVisible} />;
-//   }
-// }
-
-const MDItem = ({item, isEditing}) => {
+const MDItem = ({item, isEditing, onItemClick}) => {
   if (isEditing)
     return (
-      <ListItem disabled={true}
-        leftCheckbox={<Checkbox checked={item.isVisible} />}
+      <ListItem
+        leftCheckbox={
+          <Checkbox
+            checked={item.isVisible}
+            onClick={onItemClick}
+          />
+        }
         primaryText={item.value}
         secondaryText={item.key}
        />

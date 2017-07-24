@@ -27,7 +27,7 @@ const Header = recycle({
           return state;
         }),
 
-      Streams.getVisitorStream()
+      Streams.getVisitorStream2()
         .reducer( (state, pendoVisitor) => {
           // add better way to get email
           state.email = pendoVisitor.id;
@@ -35,7 +35,7 @@ const Header = recycle({
           return state;
         }),
 
-      Streams.getAccountStream()
+      Streams.getAccountStream2()
         .reducer( (state, pendoAccount) => {
           state.organizations = [pendoAccount.name || pendoAccount.id];
           return state;

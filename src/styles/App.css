@@ -1,7 +1,7 @@
 .App {}
 
 .App .scroll-area {
-  height: 728px;
+  height: 680px;
   overflow-y: auto;
   width: 100%;
 }

@@ -18,7 +18,7 @@ const addGroup = (isEditing, group, name) => (
 )
 
 const MDList = ({ items, isEditing, onEdit, onSave }) => (
-  <Card>
+  <Card style={{'box-shadow': 'none'}}>
     {R.values(R.mapObjIndexed(R.partial(addGroup, [isEditing]), items))}
     <CardActions>
       <FlatButton label={isEditing ? 'Done' : 'Edit'} onTouchTap={() => isEditing ? onSave() : onEdit()}></FlatButton>

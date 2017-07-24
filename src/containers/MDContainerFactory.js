@@ -19,7 +19,7 @@ const getVisibleItems = R.pipe((items, filter, isEditing) => {
   R.groupBy(R.prop('group'))
 );
 
-const factory = (type, metadataOb, metadataFilterOb) => {
+const factory = (type, metadataOb, metadataFilterOb, filterWatcher) => {
   return recycle({
     initialState: {
       items: [],
@@ -39,12 +39,16 @@ const factory = (type, metadataOb, metadataFilterOb) => {
           .addListener('onSave')
           .reducer((state) => {
             state.isEditing = false;
-
-            // state.items = R.map(R.omit(['isEditing', 'isVisible']), state.items);
             return state;
           }),
 
         metadataFilterOb
+          .reducer( (state, filter) => {
+            state.filter = filter;
+            return state;
+          }),
+          
+        filterWatcher
           .reducer( (state, filter) => {
             state.filter = filter;
             return state;
@@ -67,7 +71,7 @@ const factory = (type, metadataOb, metadataFilterOb) => {
     view (props, state) {
       const label = type;
       return (
-        <Paper zDepth={3} style={{margin: '5px 5px 15px'}}>
+        <Paper zDepth={1} style={{margin: '5px 5px 15px'}}>
           <Subheader>{label} Info</Subheader>
           <MDList items={getVisibleItems(state.items, state.filter, state.isEditing)} isEditing={state.isEditing} />
         </Paper>
