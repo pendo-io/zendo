@@ -3,8 +3,12 @@ import R from 'ramda';
 import Storage from '../sources/Storage';
 
 export const ToggleMetadataAction = (type, groupName, item) => {
+
+  // apply change
   item.isVisible = !item.isVisible;
-  const key = type == 'visitor' ? 'visitor-metadata-filter' : 'account-metadata-filter';
+
+  // persist change
+  const key = type.toLowerCase() === 'visitor' ? 'visitor-metadata-filter' : 'account-metadata-filter';
 
   const tStore = Storage.getTicketStorage();
   const filter = tStore.read(key);

@@ -9,7 +9,7 @@ import Subheader from "material-ui/Subheader";
 const getVisibleItems = R.pipe((items, filter, isEditing) => {
   const isVisible = o => o.isVisible
   filter = R.filter(isVisible, filter);
-  
+
     if (isEditing) {
       return items.map((item) => {
         item.isVisible = !!R.find(R.propEq('key', item.key))(filter);
@@ -77,7 +77,7 @@ const factory = (type, metadataOb, metadataFilterOb, filterWatcher) => {
       return (
         <Paper zDepth={1} style={{margin: '5px 5px 15px'}}>
           <Subheader>{label} Info</Subheader>
-          <MDList items={getVisibleItems(state.items, state.filter, state.isEditing)} isEditing={state.isEditing} />
+          <MDList items={getVisibleItems(state.items, state.filter, state.isEditing)} isEditing={state.isEditing} type={label}/>
         </Paper>
       )
     }

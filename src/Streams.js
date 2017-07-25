@@ -13,7 +13,7 @@ import Storage from './sources/Storage';
 const Streams = {
 
   getVisitorStream2: R.memoize(() => {
-    const $ = new Rx.AsyncSubject;
+    const $ = new Rx.AsyncSubject();
 
     const obs = Rx.Observable.zip(
       ZAF.getEmail(),
@@ -32,7 +32,7 @@ const Streams = {
   }),
 
   getAccountStream2: R.memoize(() => {
-    const $ = new Rx.AsyncSubject;
+    const $ = new Rx.AsyncSubject();
 
     const obs = Rx.Observable.zip(
       ZAF.getApiToken(),
@@ -56,7 +56,7 @@ const Streams = {
   },
 
   getFilter (filterKey) {
-    const defaults = filterKey == 'visitor-metadata-filter' ?
+    const defaults = filterKey === 'visitor-metadata-filter' ?
       ['language', 'role', 'firstvisit', 'lastvisit', 'lastservername'] :
       ['name', 'lastvisit'];
 
@@ -77,7 +77,7 @@ const Streams = {
       .combineLatest(Storage.fromEvent())
       .filter(([ticketId, evt]) => {
         console.log("watchTicketStorage.filter: ", ticketId, evt.key);
-        return evt.key == Storage.composeKey(ticketId, filterKey);
+        return evt.key === Storage.composeKey(ticketId, filterKey);
       })
       .map(([ticketId, evt]) => {
         console.log("watchTicketStorage.map: ", ticketId, evt.newValue);

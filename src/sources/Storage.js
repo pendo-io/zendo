@@ -1,5 +1,4 @@
 import Rx from 'rxjs';
-import R from 'ramda';
 import Store from '../vendor/es6-store.js';
 
 class KKV {
