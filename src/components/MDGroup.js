@@ -15,7 +15,7 @@ const MDGroup = ({name, items, isEditing}) => (
       <Subheader>{name}</Subheader>
     }
     {items.map((item) =>
-      <MDItem item={item} isEditing={isEditing} onItemClick={() => ToggleMetadataAction(name, item) }/>
+      <MDItem item={item} isEditing={isEditing} onItemClick={() => ToggleMetadataAction('visitor', name, item) }/>
     )}
   </List>
 )

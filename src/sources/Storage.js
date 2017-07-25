@@ -3,33 +3,13 @@ import Store from '../vendor/es6-store.js';
 
 class KKV {
   constructor(shardKey, onChange) {
-    // this.subjectMap = {};
     this.shardKey = shardKey;
     this.store = new Store(shardKey);
     this.onChange = onChange;
   }
 
-  // getSubjectForKey (key) {
-  //   if (this.subjectMap[key]) return this.subjectMap[key];
-  //   return this.subjectMap[key] = new Rx.BehaviorSubject();
-  // }
-
   read (key) {
     return this.store.get(key);
-    // const subject = this.getSubjectForKey(key);
-    // try {
-    // // return Rx.Observable.create( (observer) => {
-    //   var result = this.store.get(key);
-    //   subject.next(result);
-    //   console.log(`read ${result} from ${key}`);
-    // //   observer.next(result);
-    // //   observer.complete();
-    // } catch( e ) {
-    //   console.log("error from storage read");
-    //   subject.error(e)
-    // } finally {
-    //   return subject;
-    // }
   }
 
   write (key, value) {
@@ -39,35 +19,33 @@ class KKV {
       newValue: value
     })
   }
-
-  // write (key, value) {
-  //   const subject = this.getSubjectForKey(key);
-  //   this.store.set(key, value);
-  //   subject.next(value);
-  //   return subject;
-  // }
 }
 
-const onStoreChange = (evt) => {
-  Storage.$.next(evt);
-}
-const shardToStoreMap = {};
 const Storage = {
+  ticketStore: null,
+  userStore: null,
+  accountStore: null,
 
   composeKey (...keyPieces) {
     return keyPieces.join(':');
   },
 
   fromEvent () {
-    return Rx.Observable.create(Storage.$)
+    const subj = new Rx.Subject();
+    subj.subscribe(Storage.Observable$);
+    return subj;
   },
-  $: new Rx.Subject,
+  
+  Observable$: Rx.Observable.create((obs) => {
+    Storage.onChange = (evt) => obs.next(evt);
+  }),
 
   getTicketStorage (ticketId) {
-    if (!shardToStoreMap[ticketId])
-      shardToStoreMap[ticketId] = new KKV(ticketId, Storage.$.next);
+    if (!!ticketId) {
+      Storage.ticketStore = new KKV(ticketId, (evt) => Storage.onChange(evt) );
+    }
 
-    return shardToStoreMap[ticketId];
+    return Storage.ticketStore;
   }
 }
 
