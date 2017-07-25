@@ -7,6 +7,9 @@ import Paper   from 'material-ui/Paper';
 import Subheader from "material-ui/Subheader";
 
 const getVisibleItems = R.pipe((items, filter, isEditing) => {
+  const isVisible = o => o.isVisible
+  filter = R.filter(isVisible, filter);
+  
     if (isEditing) {
       return items.map((item) => {
         item.isVisible = !!R.find(R.propEq('key', item.key))(filter);
@@ -42,12 +45,13 @@ const factory = (type, metadataOb, metadataFilterOb, filterWatcher) => {
             return state;
           }),
 
+        // TODO: figure out how to combine metadataFilterOb and filterWatcher
         metadataFilterOb
           .reducer( (state, filter) => {
             state.filter = filter;
             return state;
           }),
-          
+
         filterWatcher
           .reducer( (state, filter) => {
             state.filter = filter;

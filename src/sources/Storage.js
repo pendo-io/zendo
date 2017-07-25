@@ -1,4 +1,5 @@
 import Rx from 'rxjs';
+import R from 'ramda';
 import Store from '../vendor/es6-store.js';
 
 class KKV {
@@ -32,17 +33,18 @@ const Storage = {
 
   fromEvent () {
     const subj = new Rx.Subject();
-    subj.subscribe(Storage.Observable$);
+    Storage.Observable$.subscribe(subj);
     return subj;
   },
-  
-  Observable$: Rx.Observable.create((obs) => {
-    Storage.onChange = (evt) => obs.next(evt);
-  }),
+
+  Observable$: new Rx.Subject(),
+  emitEvent (evt) {
+    Storage.Observable$.next(evt);
+  },
 
   getTicketStorage (ticketId) {
     if (!!ticketId) {
-      Storage.ticketStore = new KKV(ticketId, (evt) => Storage.onChange(evt) );
+      Storage.ticketStore = new KKV(ticketId, (evt) => Storage.emitEvent(evt) );
     }
 
     return Storage.ticketStore;

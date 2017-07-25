@@ -55,7 +55,7 @@ const Streams = {
     return ZAF.getRequester().map( (reqstr) => reqstr.avatarUrl );
   },
 
-  getFilter (filterKey = 'visitor-metadata-filter') {
+  getFilter (filterKey) {
     const defaults = filterKey == 'visitor-metadata-filter' ?
       ['language', 'role', 'firstvisit', 'lastvisit', 'lastservername'] :
       ['name', 'lastvisit'];
@@ -63,7 +63,7 @@ const Streams = {
     return ZAF.getTicketId()
       .map( (ticketId) => Storage.getTicketStorage(ticketId).read(filterKey) )
       .map( (filter) => {
-        const result = filter || defaults.map((key) => { return {key} });
+        const result = filter || defaults.map((key) => { return {key, isVisible:true} });
 
         if (!filter) {
           Storage.getTicketStorage().write(filterKey, result);
@@ -72,11 +72,17 @@ const Streams = {
       })
   },
 
-  watchTicketStorage(filterKey = 'visitor-metadata-filter') {
+  watchTicketStorage (filterKey) {
     return ZAF.getTicketId()
       .combineLatest(Storage.fromEvent())
-      .filter(([ticketId, evt]) => evt.key == Storage.composeKey(ticketId, filterKey))
-      .map(([ticketId, evt]) => evt.newValue)
+      .filter(([ticketId, evt]) => {
+        console.log("watchTicketStorage.filter: ", ticketId, evt.key);
+        return evt.key == Storage.composeKey(ticketId, filterKey);
+      })
+      .map(([ticketId, evt]) => {
+        console.log("watchTicketStorage.map: ", ticketId, evt.newValue);
+        return evt.newValue;
+      })
       .distinctUntilChanged()
       .catch( err => Rx.Observable.of(err) );
   }
