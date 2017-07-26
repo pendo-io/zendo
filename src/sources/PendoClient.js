@@ -40,8 +40,9 @@ const Pendo = {
       })
         .then( checkStatus )
         .then( res => res.json() )
-        .then( j => {
-          observer.next(j);
+        .then( users => {
+          users.map( (user) => observer.next(user) )
+          // observer.next(j);
           observer.complete();
         })
         .catch( err => observer.error(err) )
@@ -65,7 +66,7 @@ const Pendo = {
   }
 };
 
-Pendo.findUserStream.propTypes = {
+Pendo.fetchUserById.propTypes = {
   email: PropTypes.string.isRequired,
   token: PropTypes.string.isRequired
 };

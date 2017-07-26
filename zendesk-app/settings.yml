@@ -1,1 +1,3 @@
 token: "ca23dc2b-1d9e-416d-6c94-eaad11fa094c"
+pendo-lookup-field: "agent/email"
+enable-user-lookup-field: true

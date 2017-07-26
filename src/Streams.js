@@ -16,11 +16,11 @@ const Streams = {
       ZAF.getApiToken(),
       ZAF.getIDLookupField()
     ).flatMap( ([email, token, field]) => {
-      return field === 'ID' || !field ? 
+      return field === 'ID' || !field ?
         Pendo.fetchUserById(token, email) :
         Pendo.findUsersByField(token, field, email);
     })
-    .reduce( (users) => R.first(R.flatten([users])) )
+    .take(1)
     .subscribe(
       (n) => {
         $.next(n)
@@ -78,11 +78,11 @@ const Streams = {
     return ZAF.getTicketId()
       .combineLatest(Storage.fromEvent())
       .filter(([ticketId, evt]) => {
-        console.log("watchTicketStorage.filter: ", ticketId, evt.key);
+        // console.log("watchTicketStorage.filter: ", ticketId, evt.key);
         return evt.key === Storage.composeKey(ticketId, filterKey);
       })
       .map(([ticketId, evt]) => {
-        console.log("watchTicketStorage.map: ", ticketId, evt.newValue);
+        // console.log("watchTicketStorage.map: ", ticketId, evt.newValue);
         return evt.newValue;
       })
       .distinctUntilChanged()
