@@ -51,6 +51,12 @@ const ZAF = {
 
   getApiToken () {
     return ZAF.getMetadata().map( (md) => md.settings.token );
+  },
+
+  getIDLookupField () {
+    return ZAF.getMetadata().map( ({settings}) => {
+      return settings['enable-user-lookup-field'] ? settings['pendo-lookup-field'] : 'ID';
+    });
   }
 };
 

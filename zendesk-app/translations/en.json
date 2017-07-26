@@ -3,10 +3,12 @@
     "description": "Play the famous zen tunes in your help desk.",
     "name": "Buddha Machine",
     "parameters": {
-      "token": { "label": "Pendo Integration Token" }
+      "token": { "label": "Pendo Integration Token" },
+      "enable-user-lookup-field"  : { "label": "Enable searching metadata for user email?" },
+      "pendo-lookup-field": { "label": "Email Field Name" }
     }
   },
-  "loading": "Welcome to this Sample App",
+  "loading": "Pendo + Zendesk = Zendo",
   "fetch": {
     "done": "Good",
     "fail": "failed to fetch information from the server"

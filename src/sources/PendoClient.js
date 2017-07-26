@@ -16,9 +16,25 @@ function checkStatus(response) {
 
 const Pendo = {
 
-  findUserStream (email, token) {
+  fetchUserById (token, email) {
     return Rx.Observable.create(function(observer) {
       fetch(`https://pendo-dev.appspot.com/api/v1/visitor/${email}`, {
+        method: 'GET',
+        headers: {'X-Pendo-Integration-Key':token}
+      })
+        .then( checkStatus )
+        .then( res => res.json() )
+        .then( j => {
+          observer.next(j);
+          observer.complete();
+        })
+        .catch( err => observer.error(err) )
+    });
+  },
+
+  findUsersByField (token, field, email) {
+    return Rx.Observable.create(function(observer) {
+      fetch(`https://pendo-dev.appspot.com/api/v1/visitor/metadata/${field}/${email}`, {
         method: 'GET',
         headers: {'X-Pendo-Integration-Key':token}
       })

@@ -17,10 +17,20 @@
   "domainWhitelist":["pendo-dev.appspot.com"],
   "parameters": [
     {
-      "name":"token",
-      "type":"text",
-      "required":true,
-      "secure": true
+      "name":     "token",
+      "type":     "text",
+      "required": true,
+      "secure":   true
+    },
+    {
+      "name":     "pendo-lookup-field",
+      "type":     "text",
+      "required": false,
+      "secure":   false
+    },
+    {
+      "name": "enable-user-lookup-field",
+      "type": "checkbox"
     }
   ]
 }

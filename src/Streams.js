@@ -6,10 +6,6 @@ import ZAF from './sources/ZAFClient';
 import Pendo from './sources/PendoClient';
 import Storage from './sources/Storage';
 
-// var vSub = null;
-// var aSub = null;
-// var vfilterSub = null;
-
 const Streams = {
 
   getVisitorStream2: R.memoize(() => {
@@ -17,8 +13,14 @@ const Streams = {
 
     const obs = Rx.Observable.zip(
       ZAF.getEmail(),
-      ZAF.getApiToken()
-    ).flatMap( ([email, token]) => Pendo.findUserStream(email, token) )
+      ZAF.getApiToken(),
+      ZAF.getIDLookupField()
+    ).flatMap( ([email, token, field]) => {
+      return field === 'ID' || !field ? 
+        Pendo.fetchUserById(token, email) :
+        Pendo.findUsersByField(token, field, email);
+    })
+    .reduce( (users) => R.first(R.flatten([users])) )
     .subscribe(
       (n) => {
         $.next(n)

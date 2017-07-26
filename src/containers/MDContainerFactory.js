@@ -23,6 +23,10 @@ const getVisibleItems = R.pipe((items, filter, isEditing) => {
 );
 
 const factory = (type, metadataOb, metadataFilterOb, filterWatcher) => {
+
+  // note on type: currently expected to be either 'Visitor' or 'Account'.
+  // TODO: reimplement this as a Type or Enum to ensure it.
+
   return recycle({
     initialState: {
       items: [],
