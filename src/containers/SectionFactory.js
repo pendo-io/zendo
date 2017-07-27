@@ -88,13 +88,16 @@ const factory = (type, metadataOb, metadataFilterOb, filterWatcher, metricsOb) =
     view (props, state) {
       const label = type;
       return (
-        <Paper zDepth={1} style={{margin: '5px 5px 15px'}}>
+        <div>
           <Subheader>{label} Info</Subheader>
-          {!state.isEditing &&
-            <MetricsList metrics={state.metrics} />
-          }
-          <MDList items={getVisibleItems(state.items, state.filter, state.isEditing)} isEditing={state.isEditing} type={label}/>
-        </Paper>
+
+          <Paper zDepth={1} style={{margin: '5px 5px 15px'}}>
+            {!state.isEditing &&
+              <MetricsList metrics={state.metrics} />
+            }
+            <MDList items={getVisibleItems(state.items, state.filter, state.isEditing)} isEditing={state.isEditing} type={label}/>
+          </Paper>
+        </div>
       )
     }
   });
