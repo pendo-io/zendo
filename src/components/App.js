@@ -14,27 +14,31 @@ import Header from '../containers/Header';
 
 import '../styles/MDListContainer.css';
 
-import factory from '../containers/MDContainerFactory';
+import factory from '../containers/SectionFactory';
 import Streams from '../Streams';
 
-const VisitorMDContainer = factory(
+import Rx from 'rxjs';
+
+const VisitorSection = factory(
   'Visitor',
   Streams.getVisitorStream().map(visitor => visitor.metadata),
   Streams.getFilter('visitor-metadata-filter'),
-  Streams.watchTicketStorage('visitor-metadata-filter')
+  Streams.watchTicketStorage('visitor-metadata-filter'),
+  Streams.getNumDaysActiveMetric()
 );
 
-const AccountMDContainer = factory(
+const AccountSection = factory(
   'Account',
   Streams.getAccountStream().map(acct => acct.metadata),
   Streams.getFilter('account-metadata-filter'),
-  Streams.watchTicketStorage('account-metadata-filter')
+  Streams.watchTicketStorage('account-metadata-filter'),
+  Rx.Observable.of([{title: 'test', value: 123}])
 )
 
 const Info = () => (
   <div>
-    <VisitorMDContainer/>
-    <AccountMDContainer/>
+    <VisitorSection/>
+    <AccountSection/>
   </div>
 )
 const NotBuilt = () => (

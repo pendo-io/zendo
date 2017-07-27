@@ -6,6 +6,8 @@ import ZAF from './sources/ZAFClient';
 import Pendo from './sources/PendoClient';
 import Storage from './sources/Storage';
 
+import NumDaysRequest from './aggregations/NumDaysActiveForVisitors';
+
 const Streams = {
 
   getVisitorStream: R.memoize(() => {
@@ -40,7 +42,7 @@ const Streams = {
       ZAF.getApiToken(),
       Streams.getVisitorStream()
         .map((v) => v.accountIds[0])
-    ).flatMap( ([token, acctId]) => Pendo.findAccountStream(acctId, token))
+    ).flatMap( ([token, acctId]) => Pendo.findAccountStream(token, acctId))
     .subscribe(
       (n) => {
         $.next(n)
@@ -87,7 +89,38 @@ const Streams = {
       })
       .distinctUntilChanged()
       .catch( err => Rx.Observable.of(err) );
-  }
+  },
+
+  getNumDaysActiveMetric: R.memoize(() => {
+    const $ = new Rx.AsyncSubject();
+
+    const obs = Rx.Observable.zip(
+      ZAF.getApiToken(),
+      Streams.getVisitorStream().map((v) => v.id)
+    )
+      .flatMap( ([token, visitorId]) => {
+        const agg = NumDaysRequest(visitorId);
+        return Pendo.runAggregation(token, agg);
+      }).reduce((acc, val) => {
+        if (!acc.title) {
+          acc.title = "Days Active Last 30 Days";
+          acc.value = val.daysActive
+        } else
+          acc.value += val.daysActive;
+        return acc;
+      }, {})
+      .catch( err => Rx.Observable.of(err) )
+      .subscribe(
+        (n) => {
+          $.next(n)
+          obs.complete();
+        },
+        (e) => $.error(e),
+        (c) => $.complete(c)
+      );
+
+      return $;
+  })
 };
 
 export default Streams;

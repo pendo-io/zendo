@@ -6,6 +6,8 @@ import MDList from '../components/MDList';
 import Paper   from 'material-ui/Paper';
 import Subheader from "material-ui/Subheader";
 
+import MetricsList from '../components/MetricsList';
+
 const getVisibleItems = R.pipe((items, filter, isEditing) => {
   const isVisible = o => o.isVisible
   filter = R.filter(isVisible, filter);
@@ -22,7 +24,7 @@ const getVisibleItems = R.pipe((items, filter, isEditing) => {
   R.groupBy(R.prop('group'))
 );
 
-const factory = (type, metadataOb, metadataFilterOb, filterWatcher) => {
+const factory = (type, metadataOb, metadataFilterOb, filterWatcher, metricsOb) => {
 
   // note on type: currently expected to be either 'Visitor' or 'Account'.
   // TODO: reimplement this as a Type or Enum to ensure it.
@@ -31,7 +33,8 @@ const factory = (type, metadataOb, metadataFilterOb, filterWatcher) => {
     initialState: {
       items: [],
       filter: [],
-      isEditing: false
+      isEditing: false,
+      metrics: []
     },
     update (sources) {
       return [
@@ -73,6 +76,12 @@ const factory = (type, metadataOb, metadataFilterOb, filterWatcher) => {
             state.items = R.flatten(ugh);
 
             return state;
+          }),
+
+        metricsOb
+          .reducer( (state, list) => {
+            state.metrics = R.flatten([list]);
+            return state;
           })
       ]
     },
@@ -81,6 +90,9 @@ const factory = (type, metadataOb, metadataFilterOb, filterWatcher) => {
       return (
         <Paper zDepth={1} style={{margin: '5px 5px 15px'}}>
           <Subheader>{label} Info</Subheader>
+          {!state.isEditing &&
+            <MetricsList metrics={state.metrics} />
+          }
           <MDList items={getVisibleItems(state.items, state.filter, state.isEditing)} isEditing={state.isEditing} type={label}/>
         </Paper>
       )
