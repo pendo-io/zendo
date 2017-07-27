@@ -1,6 +1,7 @@
 import React/*, { Component }*/ from 'react';
 import recycle from 'recycle';
 import muiThemeable from 'material-ui/styles/muiThemeable';
+import IconButton from 'material-ui/IconButton';
 import Streams from '../Streams';
 
 import '../styles/Header.css';
@@ -8,6 +9,7 @@ import '../styles/Header.css';
 const Header = recycle({
   initialState: {
     avatarUrl: '',
+    id: '',
     name: '',
     email: '',
     organizations: []
@@ -21,21 +23,30 @@ const Header = recycle({
           return state;
         }),
 
+      sources.select(IconButton)
+        .addListener('onClick')
+        .reducer((state) => {
+          // TODO: fix this, it might not be email
+          window.open(`https://pendo-dev.appspot.com/visitor/${state.id}`, '_newtab');
+          return state;
+        }),
+
       Streams.getAvatarUrlStream()
         .reducer( (state, aus) => {
           state.avatarUrl = aus;
           return state;
         }),
 
-      Streams.getVisitorStream2()
+      Streams.getVisitorStream()
         .reducer( (state, pendoVisitor) => {
           // add better way to get email
+          state.id = pendoVisitor.id;
           state.email = pendoVisitor.id;
           state.name = pendoVisitor.displayName || state.email;
           return state;
         }),
 
-      Streams.getAccountStream2()
+      Streams.getAccountStream()
         .reducer( (state, pendoAccount) => {
           state.organizations = [pendoAccount.name || pendoAccount.id];
           return state;
@@ -62,6 +73,8 @@ const Header = recycle({
         </h2>
         {/*This is how you make comments*/}
         {/*<button className="change-user">Change user</button>*/}
+        <IconButton iconClassName='material-icons' iconStyle={{color:'#fff'}}
+          style={{position: 'absolute', top: '5px', right: '5px'}}>open_in_new</IconButton>
       </div>
     );
   }

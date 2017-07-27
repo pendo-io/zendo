@@ -19,14 +19,14 @@ import Streams from '../Streams';
 
 const VisitorMDContainer = factory(
   'Visitor',
-  Streams.getVisitorStream2().map(visitor => visitor.metadata),
+  Streams.getVisitorStream().map(visitor => visitor.metadata),
   Streams.getFilter('visitor-metadata-filter'),
   Streams.watchTicketStorage('visitor-metadata-filter')
 );
 
 const AccountMDContainer = factory(
   'Account',
-  Streams.getAccountStream2().map(acct => acct.metadata),
+  Streams.getAccountStream().map(acct => acct.metadata),
   Streams.getFilter('account-metadata-filter'),
   Streams.watchTicketStorage('account-metadata-filter')
 )

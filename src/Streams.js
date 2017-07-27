@@ -8,7 +8,7 @@ import Storage from './sources/Storage';
 
 const Streams = {
 
-  getVisitorStream2: R.memoize(() => {
+  getVisitorStream: R.memoize(() => {
     const $ = new Rx.AsyncSubject();
 
     const obs = Rx.Observable.zip(
@@ -33,12 +33,12 @@ const Streams = {
     return $;
   }),
 
-  getAccountStream2: R.memoize(() => {
+  getAccountStream: R.memoize(() => {
     const $ = new Rx.AsyncSubject();
 
     const obs = Rx.Observable.zip(
       ZAF.getApiToken(),
-      Streams.getVisitorStream2()
+      Streams.getVisitorStream()
         .map((v) => v.accountIds[0])
     ).flatMap( ([token, acctId]) => Pendo.findAccountStream(acctId, token))
     .subscribe(
