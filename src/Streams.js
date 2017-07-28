@@ -55,19 +55,53 @@ const Streams = {
     return $;
   }),
 
+  getMetadataSchema: R.memoize((type) => {
+    const $ = new Rx.AsyncSubject();
+    const obs = ZAF.getApiToken()
+      .flatMap( (token) => Pendo.getMetadataSchema(token, type) )
+      .subscribe(
+        (n) => {
+          $.next(n);
+          obs.complete();
+        },
+        (e) => $.error(e),
+        (c) => $.complete(c)
+      );
+    return $;
+  }),
+
+  getMetadata: R.memoize((type) => {
+    const obs = type === 'visitor' ?
+      Streams.getVisitorStream().map( visitor => visitor.metadata ) :
+      Streams.getAccountStream().map( account => account.metadata );
+
+      return Rx.Observable.zip(
+        obs,
+        Streams.getMetadataSchema(type)
+      ).map(([md, schema]) => {
+
+        // FFfuuuuuuuu -- this would've been so great but the structures don't align
+        // const mdP = R.mergeDeepLeft(md, schema);
+
+        // f-it, we're going to make them align
+        const aMD = R.map((groupObj) => {
+          return R.map((val) => { return {value: val}; }, groupObj);
+        }, md);
+
+        const mdP = R.mergeDeepLeft(aMD, schema);
+        return mdP;
+      });
+  }),
+
   getAvatarUrlStream () {
     return ZAF.getRequester().map( (reqstr) => reqstr.avatarUrl );
   },
 
   getFilter (filterKey) {
-    const defaults = filterKey === 'visitor-metadata-filter' ?
-      ['language', 'role', 'firstvisit', 'lastvisit', 'lastservername'] :
-      ['name', 'lastvisit'];
-
     return ZAF.getTicketId()
       .map( (ticketId) => Storage.getTicketStorage(ticketId).read(filterKey) )
       .map( (filter) => {
-        const result = filter || defaults.map((key) => { return {key, isVisible:true} });
+        const result = filter || [];
 
         if (!filter) {
           Storage.getTicketStorage().write(filterKey, result);

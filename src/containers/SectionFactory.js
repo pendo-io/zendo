@@ -14,12 +14,12 @@ const getVisibleItems = R.pipe((items, filter, isEditing) => {
 
     if (isEditing) {
       return items.map((item) => {
-        item.isVisible = !!R.find(R.propEq('key', item.key))(filter);
+        item.isVisible = !!R.find(R.propEq('key', item.group+'-'+item.key))(filter);
         return item;
       });
     }
 
-    return R.filter((item) => R.find(R.propEq('key', item.key))(filter), items );
+    return R.filter((item) => R.find(R.propEq('key', item.group+'-'+item.key))(filter), items );
   },
   R.groupBy(R.prop('group'))
 );
@@ -69,7 +69,12 @@ const factory = (type, metadataOb, metadataFilterOb, filterWatcher, metricsOb) =
           .reducer( (state, md) => {
             const ugh = R.values(R.mapObjIndexed((groupItems, groupName) => {
               return R.values(R.mapObjIndexed((itemValue, itemName) => {
-                return { group: groupName, key: itemName, value: itemValue };
+                return {
+                  group: groupName,
+                  key: itemName,
+                  schema: itemValue,
+                  value: itemValue.value
+                };
               }, groupItems));
             }, md));
 
@@ -90,7 +95,6 @@ const factory = (type, metadataOb, metadataFilterOb, filterWatcher, metricsOb) =
       return (
         <div>
           <Subheader>{label} Info</Subheader>
-
           <Paper zDepth={1} style={{margin: '5px 5px 15px'}}>
             {!state.isEditing &&
               <MetricsList metrics={state.metrics} />

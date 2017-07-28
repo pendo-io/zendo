@@ -4,7 +4,8 @@ import Subheader from 'material-ui/Subheader';
 const listStyle = {
   margin: '10px 0 20px 0',
   'font-size': '15px',
-  'list-style': 'none'
+  'list-style': 'none',
+  'padding-left': '16px'
 };
 
 const MetricsList = ({metrics}) => (

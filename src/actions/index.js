@@ -13,6 +13,10 @@ export const ToggleMetadataAction = (type, groupName, item) => {
   const tStore = Storage.getTicketStorage();
   const filter = tStore.read(key);
 
-  const newFilter = R.concat(R.reject(R.propEq('key', item.key), filter), [R.omit(['group', 'value'], item)] );
+  const newFilter = R.concat(R.reject(R.propEq('key', groupName+'-'+item.key), filter),
+    R.map((f) => {
+      f.key = groupName+'-'+f.key;
+      return f;
+    }, [R.omit(['group', 'value'], item)]) );
   tStore.write( key, newFilter );
 }

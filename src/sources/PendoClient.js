@@ -17,10 +17,12 @@ function checkStatus(response) {
 
 const Pendo = {
 
-  // initialize (token) {
+  initialize (token) {
   //   // TODO: implement this to partially apply token once to all the functions here
-  //   R.map((key) => R.partial(Pendo[key], token), ()R.filter(R.equals('initialize'),R.keys(Pendo)))
-  // },
+    // R.map((key) => R.partial(Pendo[key], token), ()R.filter(R.equals('initialize'),R.keys(Pendo)))
+    R.map((key) => console.log(`applying ${token} to Pendo.${key}`), R.reject(R.equals('initialize'),R.keys(Pendo)))
+    R.map((key) => R.partial(Pendo[key], token), R.reject(R.equals('initialize'),R.keys(Pendo)))
+  },
 
   fetchUserById (token, email) {
     return Rx.Observable.create((observer) => {
@@ -85,6 +87,22 @@ const Pendo = {
         .then( res => res.json() )
         .then( obj => {
           obj.results.map( (r) => observer.next(r) );
+          observer.complete();
+        })
+        .catch( err => observer.error(err) )
+    });
+  },
+
+  getMetadataSchema (token, type) {
+    return Rx.Observable.create((observer) => {
+      fetch(`https://pendo-dev.appspot.com/api/v1/metadata/schema/${type}`, {
+        method: 'GET',
+        headers: {'X-Pendo-Integration-Key': token}
+      })
+        .then( checkStatus )
+        .then( res => res.json() )
+        .then( obj => {
+          observer.next(obj);
           observer.complete();
         })
         .catch( err => observer.error(err) )

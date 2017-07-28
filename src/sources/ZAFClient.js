@@ -1,6 +1,8 @@
 import Rx from 'rxjs';
+import R from 'ramda';
+import Pendo from './PendoClient';
 
-const initZAF = () => {
+const initZAF = R.memoize(() => {
   /* eslint-disable no-undef */
   const client = ZAFClient.init();
 
@@ -9,7 +11,7 @@ const initZAF = () => {
   }
 
   return client;
-}
+});
 
 const resize = (client, width='100%', height='800px') => {
   client.invoke('resize', {
@@ -19,8 +21,6 @@ const resize = (client, width='100%', height='800px') => {
 }
 
 const zaf$ = new Rx.BehaviorSubject(initZAF());
-
-zaf$.subscribe(resize, (e) => console.error(e) );
 
 const ZAF = {
   getRequester() {
@@ -59,5 +59,13 @@ const ZAF = {
     });
   }
 };
+
+
+zaf$.subscribe(resize, (e) => console.error(e) );
+
+// TODO: part of larger refactor
+// zaf$.subscribe(() => {
+//   ZAF.getApiToken().subscribe(Pendo.initialize);
+// });
 
 export default ZAF;

@@ -21,7 +21,8 @@ import Rx from 'rxjs';
 
 const VisitorSection = factory(
   'Visitor',
-  Streams.getVisitorStream().map(visitor => visitor.metadata),
+  // Streams.getVisitorStream().map(visitor => visitor.metadata),
+  Streams.getMetadata('visitor'),
   Streams.getFilter('visitor-metadata-filter'),
   Streams.watchTicketStorage('visitor-metadata-filter'),
   Streams.getNumDaysActiveMetric()
@@ -29,7 +30,8 @@ const VisitorSection = factory(
 
 const AccountSection = factory(
   'Account',
-  Streams.getAccountStream().map(acct => acct.metadata),
+  // Streams.getAccountStream().map(acct => acct.metadata),
+  Streams.getMetadata('account'),
   Streams.getFilter('account-metadata-filter'),
   Streams.watchTicketStorage('account-metadata-filter'),
   Rx.Observable.of([{title: 'test', value: 123}])
