@@ -34,7 +34,7 @@ const AccountSection = factory(
   Streams.getMetadata('account'),
   Streams.getFilter('account-metadata-filter'),
   Streams.watchTicketStorage('account-metadata-filter'),
-  Rx.Observable.of([{title: 'test', value: 123}])
+  Streams.getAccountMetrics()
 )
 
 const Info = () => (

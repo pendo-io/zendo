@@ -6,7 +6,11 @@ import ZAF from './sources/ZAFClient';
 import Pendo from './sources/PendoClient';
 import Storage from './sources/Storage';
 
-import {NumDaysRequest, NumFeaturesUsed} from './aggregations';
+import {
+  NumDaysRequest,
+  NumFeaturesUsed,
+  NumUsers
+} from './aggregations';
 
 const Streams = {
 
@@ -125,6 +129,40 @@ const Streams = {
       .catch( err => Rx.Observable.of(err) );
   },
 
+  getAccountMetrics () {
+    return Rx.Observable.merge(
+      Streams.getNumUsers()
+    );
+  },
+  getNumUsers: R.memoize(() => {
+    const $ = new Rx.AsyncSubject();
+    const obs = Rx.Observable.zip(
+      ZAF.getApiToken(),
+      Streams.getAccountStream().map((a) => a.id)
+    )
+      .flatMap(([token, acctId]) => {
+        const agg = NumUsers(acctId);
+        return Pendo.runAggregation(token, agg);
+      }).reduce((acc, val) => {
+        if (!acc.title) {
+          acc.title = "Unique Users Last 30 Days";
+          acc.value = val.count;
+        }
+        return acc;
+      }, {})
+      .catch(err => Rx.Observable.of(err))
+      .subscribe(
+        (n) => {
+          $.next(n);
+          obs.complete();
+        },
+        (e) => $.error(e),
+        (c) => $.complete(c)
+      );
+
+    return $;
+  }),
+
   getVisitorMetrics () {
     return Rx.Observable.merge(
       Streams.getNumDaysActiveMetric(),
@@ -145,7 +183,7 @@ const Streams = {
       }).reduce((acc, val) => {
         const fName = val["Feature Name"];
         if (!acc.title) {
-          acc.title = "# Features Used Last 30 Days";
+          acc.title = "Features Used Last 30 Days";
           acc.value = 1;
           acc[fName] = 1;
         } else {
