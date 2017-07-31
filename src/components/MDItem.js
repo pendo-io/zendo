@@ -6,7 +6,7 @@ import Checkbox from 'material-ui/Checkbox';
 import dateformat from 'dateformat';
 
 const applySchema = (value, schema) => {
-  if (schema.Type === 'time') {
+  if (schema.Type === 'time' && !!value) {
     return dateformat(new Date(value), "fullDate");
   }
 

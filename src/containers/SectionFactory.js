@@ -85,7 +85,9 @@ const factory = (type, metadataOb, metadataFilterOb, filterWatcher, metricsOb) =
 
         metricsOb
           .reducer( (state, list) => {
-            state.metrics = R.flatten([list]);
+            // console.log("got metrics event", list);
+            state.metrics = R.concat(state.metrics, R.flatten([list]));
+            // console.log("state.metrics now", state.metrics);
             return state;
           })
       ]

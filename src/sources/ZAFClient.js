@@ -1,6 +1,6 @@
 import Rx from 'rxjs';
 import R from 'ramda';
-import Pendo from './PendoClient';
+// import Pendo from './PendoClient';
 
 const initZAF = R.memoize(() => {
   /* eslint-disable no-undef */

@@ -8,14 +8,14 @@ const agg = {
     "mimeType": "application/json"
 	},
 	"request": {
-		"requestId":"zendo-testing-visitorNumActiveDays-last30days",
+		"requestId":"zendo-visitorNumActiveDays-lastNdays",
     "pipeline": [
 			{
 				"source": {
 	        "events": {"eventClass":["web", "ios"]},
 					"timeSeries": {
     	    	"period": "dayRange",
-      	  	"count": 30,
+      	  	"count": "%NUM_DAYS%",
         		"first": "%FIRST_DATE_STR%"
     			}
     		}
@@ -34,13 +34,16 @@ const agg = {
 	}
 }
 
-const NumDaysRequest = R.memoize((visitorId) => {
+const buildTimeSeries = (days) => `dateAdd(now(), -${days}, "days")`
+
+const NumDaysRequest = R.memoize((visitorId, lastNDays=30) => {
 	try {
 
 		var pipeline = agg.request.pipeline;
 		pipeline = R.map((piece) => {
 			if (!!piece.source) {
-				piece.source.timeSeries.first = "dateAdd(now(), -30, \"days\")";
+				piece.source.timeSeries.first = buildTimeSeries(lastNDays);//"dateAdd(now(), -30, \"days\")";
+				piece.source.timeSeries.count = lastNDays;
 			}
 			else if (!!piece.filter) {
 				piece.filter.value = visitorId;

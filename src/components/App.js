@@ -25,7 +25,7 @@ const VisitorSection = factory(
   Streams.getMetadata('visitor'),
   Streams.getFilter('visitor-metadata-filter'),
   Streams.watchTicketStorage('visitor-metadata-filter'),
-  Streams.getNumDaysActiveMetric()
+  Streams.getVisitorMetrics()
 );
 
 const AccountSection = factory(
