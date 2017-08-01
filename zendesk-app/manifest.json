@@ -3,7 +3,7 @@
   "author": {
     "name": "brec-c",
     "email": "brec@pendo.io",
-    "url": ""
+    "url": "https://pendo.io"
   },
   "defaultLocale": "en",
   "private": true,
@@ -14,7 +14,7 @@
   },
   "version": "1.0",
   "frameworkVersion": "2.0",
-  "domainWhitelist":["pendo-dev.appspot.com"],
+  "domainWhitelist":["pendo-dev.appspot.com", "app.pendo.io"],
   "parameters": [
     {
       "name":     "token",

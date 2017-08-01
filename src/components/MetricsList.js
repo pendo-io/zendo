@@ -18,9 +18,7 @@ const MetricsList = ({metrics}) => (
       {metrics.map((m) => (
         <ListItem disabled={true}
           style={{padding: '5px 16px' }}
-          primaryText={
-            <span>{m.value}</span>
-          }
+          primaryText={m.value}
           secondaryText={m.title}
         />
       ))}

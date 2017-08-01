@@ -1,7 +1,9 @@
 {
   "app": {
-    "description": "Play the famous zen tunes in your help desk.",
-    "name": "Buddha Machine",
+    "short_description": "See Pendo data for the ticket submitter",
+    "long_description" : "See Pendo data for the ticket submitter (TODO)",
+    "installation_instructions": "Create a Pendo Integration Key.  Provide during set up of Zendo. (TODO)",
+    "name": "Zendo",
     "parameters": {
       "token": { "label": "Pendo Integration Token" },
       "enable-user-lookup-field"  : { "label": "Enable searching metadata for user email?" },
@@ -14,8 +16,8 @@
     "fail": "failed to fetch information from the server"
   },
   "id": "ID",
-  "email": "Email",
-  "name": "Name",
+  "email": "brec@pendo.io",
+  "name": "Brec Carson",
   "role": "Role",
   "groups": "Groups"
 }

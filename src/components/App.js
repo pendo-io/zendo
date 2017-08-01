@@ -21,7 +21,6 @@ import Rx from 'rxjs';
 
 const VisitorSection = factory(
   'Visitor',
-  // Streams.getVisitorStream().map(visitor => visitor.metadata),
   Streams.getMetadata('visitor'),
   Streams.getFilter('visitor-metadata-filter'),
   Streams.watchTicketStorage('visitor-metadata-filter'),
@@ -30,7 +29,6 @@ const VisitorSection = factory(
 
 const AccountSection = factory(
   'Account',
-  // Streams.getAccountStream().map(acct => acct.metadata),
   Streams.getMetadata('account'),
   Streams.getFilter('account-metadata-filter'),
   Streams.watchTicketStorage('account-metadata-filter'),
@@ -45,7 +43,7 @@ const Info = () => (
 )
 const NotBuilt = () => (
   <div>
-    <h2>Not built yet</h2>
+    <h2>Coming Soon</h2>
   </div>
 )
 

@@ -8,6 +8,7 @@
 
 # production
 /build
+zendesk-app/tmp
 
 # misc
 .DS_Store

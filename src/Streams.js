@@ -129,11 +129,11 @@ const Streams = {
       .catch( err => Rx.Observable.of(err) );
   },
 
-  getAccountMetrics () {
+  getAccountMetrics: R.memoize(() => {
     return Rx.Observable.merge(
       Streams.getNumUsers()
     );
-  },
+  }),
   getNumUsers: R.memoize(() => {
     const $ = new Rx.AsyncSubject();
     const obs = Rx.Observable.zip(
@@ -163,12 +163,12 @@ const Streams = {
     return $;
   }),
 
-  getVisitorMetrics () {
+  getVisitorMetrics: R.memoize(() => {
     return Rx.Observable.merge(
       Streams.getNumDaysActiveMetric(),
       Streams.getNumFeaturesUsed()
     );
-  },
+  }),
 
   getNumFeaturesUsed: R.memoize(() => {
     const $ = new Rx.AsyncSubject();
