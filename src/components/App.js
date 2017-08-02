@@ -11,13 +11,12 @@ import {Tabs, Tab} from 'material-ui/Tabs';
 
 import '../styles/App.css';
 import Header from '../containers/Header';
+import Timeline from '../containers/Timeline';
 
 import '../styles/MDListContainer.css';
 
 import factory from '../containers/SectionFactory';
 import Streams from '../Streams';
-
-import Rx from 'rxjs';
 
 const VisitorSection = factory(
   'Visitor',
@@ -68,7 +67,7 @@ const App = () => (
         <div className="scroll-area">
           <Switch>
             <Route exact path="/" component={Info} />
-            <Route path="/timeline" component={NotBuilt} />
+            <Route path="/timeline" component={Timeline} />
             <Route path="/settings" component={NotBuilt} />
             <Route component={NoMatch} />
           </Switch>

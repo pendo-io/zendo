@@ -4,6 +4,8 @@ import muiThemeable from 'material-ui/styles/muiThemeable';
 import IconButton from 'material-ui/IconButton';
 import Streams from '../Streams';
 
+import Pendo from '../sources/PendoClient';
+
 import '../styles/Header.css';
 
 const Header = recycle({
@@ -22,12 +24,11 @@ const Header = recycle({
           console.log("got click on change user link");
           return state;
         }),
-
       sources.select(IconButton)
         .addListener('onClick')
         .reducer((state) => {
           // TODO: fix this, it might not be email
-          window.open(`https://pendo-dev.appspot.com/visitor/${state.id}`, '_newtab');
+          window.open(`${Pendo.url}/visitor/${state.id}`, '_newtab');
           return state;
         }),
 

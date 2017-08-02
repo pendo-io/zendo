@@ -23,23 +23,35 @@ const resize = (client, width='100%', height='800px') => {
 const zaf$ = new Rx.BehaviorSubject(initZAF());
 
 const ZAF = {
-  getRequester() {
+  getRequester () {
     return zaf$.flatMap( (client) => {
       return Rx.Observable.fromPromise(client.get(['ticket.requester']))
     }).map( (data) => data['ticket.requester'] );
   },
 
-  getEmail() {
+  getTicket () {
+    return zaf$.flatMap( (client) => {
+      return Rx.Observable.fromPromise(client.get(['ticket']))
+    }).map( (data) => data['ticket'] );
+  },
+
+  getTicketCreateDate() {
+    return ZAF.getTicket()
+      .map( (ticket) => ticket.createdAt )
+      .map( (dateStr) => new Date(1501689260706) ) //dateStr) ) // XXX put this back!
+  },
+
+  getEmail () {
     return ZAF.getRequester().map( (requester) => requester.email );
   },
 
-  getMetadata() {
+  getMetadata () {
     return zaf$.flatMap( (client) => {
       return Rx.Observable.fromPromise(client.metadata())
     });
   },
 
-  getContext() {
+  getContext () {
     return zaf$.flatMap( (client) => {
       return Rx.Observable.fromPromise(client.context())
     });

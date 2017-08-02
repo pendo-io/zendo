@@ -239,6 +239,45 @@ const Streams = {
       );
 
       return $;
+  }),
+
+  // TODO: allow for a different time to be specified
+
+  getVisitorHistory: R.memoize(() => {
+    const $ = new Rx.AsyncSubject();
+    const obs = Rx.Observable.zip(
+      ZAF.getApiToken(),
+      Streams.getVisitorStream().map( (v) => v.id ),
+      ZAF.getTicketCreateDate()
+    )
+      .flatMap( ([token, visitorId, cDate]) => {
+        return Pendo.getVisitorHistory(token, visitorId, cDate.getTime());
+      })
+      .map(R.reverse)
+      .catch( err => Rx.Observable.of(err) )
+      .subscribe(
+        (n) => {
+          $.next(n);
+          obs.complete();
+        },
+        (e) => $.error(e),
+        (c) => $.complete(c)
+      );
+    return $;
+  }),
+
+  getPendoModels: R.memoize(() => {
+    return ZAF.getApiToken()
+      .flatMap((token) => {
+        return Rx.Observable.zip(
+          Streams.getVisitorHistory()
+            .map( (history) => R.filter(R.propEq('type', 'guide'), history) )
+            .map( (guides) => R.map(R.prop('guideId'), guides) )
+            .flatMap( (guideIds) => Pendo.getGuides(token, guideIds) ),
+          Pendo.getPages(token),
+          Pendo.getFeatures(token)
+        )
+      })
   })
 };
 

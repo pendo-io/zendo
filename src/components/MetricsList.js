@@ -2,13 +2,6 @@ import React from 'react';
 import Subheader from 'material-ui/Subheader';
 import {List,ListItem} from 'material-ui/List';
 
-const listStyle = {
-  margin: '10px 0 20px 0',
-  'font-size': '15px',
-  'list-style': 'none',
-  'padding-left': '16px'
-};
-
 const MetricsList = ({metrics}) => (
   <div>
     <Subheader

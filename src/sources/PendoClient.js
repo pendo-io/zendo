@@ -17,6 +17,8 @@ function checkStatus(response) {
 
 const Pendo = {
 
+  url: process.env.REACT_APP_HOST_ENV === 'production' ? 'https://app.pendo.io' : 'https://pendo-dev.appspot.com',
+
   initialize (token) {
   //   // TODO: implement this to partially apply token once to all the functions here
     // R.map((key) => R.partial(Pendo[key], token), ()R.filter(R.equals('initialize'),R.keys(Pendo)))
@@ -26,7 +28,7 @@ const Pendo = {
 
   fetchUserById (token, email) {
     return Rx.Observable.create((observer) => {
-      fetch(`https://pendo-dev.appspot.com/api/v1/visitor/${email}`, {
+      fetch(`${Pendo.url}/api/v1/visitor/${email}`, {
         method: 'GET',
         headers: {'X-Pendo-Integration-Key':token}
       })
@@ -42,7 +44,7 @@ const Pendo = {
 
   findUsersByField (token, field, email) {
     return Rx.Observable.create((observer) => {
-      fetch(`https://pendo-dev.appspot.com/api/v1/visitor/metadata/${field}/${email}`, {
+      fetch(`${Pendo.url}/api/v1/visitor/metadata/${field}/${email}`, {
         method: 'GET',
         headers: {'X-Pendo-Integration-Key':token}
       })
@@ -59,7 +61,7 @@ const Pendo = {
 
   findAccountStream (token, accountId) {
     return Rx.Observable.create((observer) => {
-      fetch(`https://pendo-dev.appspot.com/api/v1/account/${accountId}`, {
+      fetch(`${Pendo.url}/api/v1/account/${accountId}`, {
         method: 'GET',
         headers: {'X-Pendo-Integration-Key':token}
       })
@@ -75,7 +77,7 @@ const Pendo = {
 
   runAggregation (token, agg) {
     return Rx.Observable.create((observer) => {
-      fetch(`https://pendo-dev.appspot.com/api/v1/aggregation`, {
+      fetch(`${Pendo.url}/api/v1/aggregation`, {
         method: 'POST',
         headers: {
           'X-Pendo-Integration-Key':token,
@@ -95,7 +97,7 @@ const Pendo = {
 
   getMetadataSchema (token, type) {
     return Rx.Observable.create((observer) => {
-      fetch(`https://pendo-dev.appspot.com/api/v1/metadata/schema/${type}`, {
+      fetch(`${Pendo.url}/api/v1/metadata/schema/${type}`, {
         method: 'GET',
         headers: {'X-Pendo-Integration-Key': token}
       })
@@ -107,6 +109,73 @@ const Pendo = {
         })
         .catch( err => observer.error(err) )
     });
+  },
+
+  getVisitorHistory(token, visitorId, endTime) {
+    const starttime = endTime - (24 * 60 * 60 * 1000);
+    return Rx.Observable.create((observer) => {
+      fetch(`${Pendo.url}/api/v1/visitor/${visitorId}/history?starttime=${starttime}`, {
+        method: 'GET',
+        headers: {'X-Pendo-Integration-Key': token}
+      })
+        .then( checkStatus )
+        .then( res => res.json() )
+        .then( obj => {
+          observer.next(obj);
+          observer.complete();
+        })
+        .catch( err => observer.error(err) )
+    });
+  },
+
+  getPages(token) {
+    return Rx.Observable.create((observer) => {
+      fetch(`${Pendo.url}/api/v1/page`, {
+        method: 'GET',
+        headers: {'X-Pendo-Integration-Key': token}
+      })
+        .then( checkStatus )
+        .then( res => res.json() )
+        .then( obj => {
+          observer.next(obj);
+          observer.complete();
+        })
+        .catch( err => observer.error(err) )
+    })
+  },
+
+  getFeatures(token) {
+    return Rx.Observable.create((observer) => {
+      fetch(`${Pendo.url}/api/v1/feature`, {
+        method: 'GET',
+        headers: {'X-Pendo-Integration-Key': token}
+      })
+        .then( checkStatus )
+        .then( res => res.json() )
+        .then( obj => {
+          observer.next(obj);
+          observer.complete();
+        })
+        .catch( err => observer.error(err) )
+    })
+  },
+
+  getGuides(token, ids) {
+    if (!ids.length) return Rx.Observable.of([]);
+
+    return Rx.Observable.create((observer) => {
+      fetch(`${Pendo.url}/api/v1/guide?id=${ids.join(',')}`, {
+        method: 'GET',
+        headers: {'X-Pendo-Integration-Key': token}
+      })
+        .then( checkStatus )
+        .then( res => res.json() )
+        .then( obj => {
+          observer.next(obj);
+          observer.complete();
+        })
+        .catch( err => observer.error(err) )
+    })
   }
 };
 
