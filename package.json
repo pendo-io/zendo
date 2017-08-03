@@ -28,7 +28,7 @@
     "build": "react-scripts build && cp -r ./build/* ./zendesk-app/assets",
     "build:prod": "REACT_APP_HOST_ENV=production react-scripts build && cp -r ./build/* ./zendesk-app/assets",
     "clean": "rm ./zendesk-app/assets/static/js/* && rm ./zendesk-app/assets/static/css/*",
-    "package": "rm ./zendesk-app/assets/static/js/*.map && cd ./zendesk-app && zat package && cd ../",
+    "pre:package": "rm ./zendesk-app/assets/static/js/*.map && cd ./zendesk-app && zat package && cd ../",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   }

@@ -45,23 +45,6 @@ const onItemTouch = (item) => {
   const id = item.pageId || item.featureId || item.guideId;
   window.open(`${Pendo.url}/${item.type}s/${id}`, '_newtab');
 }
-//
-// // left Icon
-// // primary text
-// // secondaryText
-//
-// const TimelineRow = ({item, lookup}) => {
-//   const leftIcon = getIcon(item.type);
-//   return (
-//     <ListItem
-//       style={{padding: '5px 16px' }}
-//       leftIcon={leftIcon}
-//       primaryText={getPrimaryText(item, lookup)}
-//       secondaryText={getTimeOfDay(new Date(item.ts || 0))}
-//     >
-//     </ListItem>
-//   )
-// }
 
 const Timeline = recycle({
   initialState: {
@@ -116,9 +99,6 @@ const Timeline = recycle({
       <div>
         <Subheader>{state.day}</Subheader>
         <Paper zDepth={0} style={{margin: '5px 5px 15px'}}>
-          {!state.history.length &&
-            <div>No history to show on the timeline.</div>
-          }
           <List>
             <ListItem disabled={true}
               style={{background: '#fffbe5', border: '1px solid #ecb'}}
@@ -135,6 +115,9 @@ const Timeline = recycle({
               </ListItem>
             )}
           </List>
+          {!state.history.length &&
+            <div>No history to show on the timeline.</div>
+          }
         </Paper>
       </div>
     );
