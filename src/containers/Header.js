@@ -75,7 +75,10 @@ const Header = recycle({
         {/*This is how you make comments*/}
         {/*<button className="change-user">Change user</button>*/}
         <IconButton iconClassName='material-icons' iconStyle={{color:'#fff'}}
-          style={{position: 'absolute', top: '5px', right: '5px'}}>open_in_new</IconButton>
+          style={{position: 'absolute', top: '5px', right: '5px'}}
+          tooltip='Open in Pendo' tooltipPosition='bottom-left'>
+          open_in_new
+        </IconButton>
       </div>
     );
   }

@@ -62,7 +62,7 @@ const App = () => (
         <Tabs>
           <Tab label="Info" containerElement={<NavLink to="/"/>} />
           <Tab label="Timeline" containerElement={<NavLink to="/timeline"/>}/>
-          <Tab label="Settings" containerElement={<NavLink to="/settings"/>} />
+          {/*<Tab label="Settings" containerElement={<NavLink to="/settings"/>} /> */}
         </Tabs>
         <div className="scroll-area">
           <Switch>
