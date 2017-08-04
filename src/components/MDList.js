@@ -20,6 +20,11 @@ const addGroup = (isEditing, type, group, name) => (
 const MDList = ({ items, isEditing, onEdit, onSave, type }) => (
   <Card style={{'box-shadow': 'none'}}>
     <CardTitle subtitle="Metadata" />
+    {!R.length(R.keys(items)) &&
+      <span style={{'padding-left': '15px', 'font-style':'italic', 'font-size': '12px', 'color': 'rgba(0, 0, 0, 0.54)'}}>
+        Click Edit to add fields to view
+      </span>
+    }
     {R.values(R.mapObjIndexed(R.partial(addGroup, [isEditing, type]), items))}
     <CardActions>
       <FlatButton label={isEditing ? 'Done' : 'Edit'} onTouchTap={() => isEditing ? onSave() : onEdit()}></FlatButton>
