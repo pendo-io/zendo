@@ -1,4 +1,6 @@
 import React/*, { Component }*/ from 'react';
+import Rx from 'rxjs';
+import R from 'ramda';
 import recycle from 'recycle';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import IconButton from 'material-ui/IconButton';
@@ -14,7 +16,8 @@ const Header = recycle({
     id: '',
     name: '',
     email: '',
-    organizations: []
+    organizations: [],
+    error: null
   },
   update (sources) {
     return [
@@ -39,8 +42,17 @@ const Header = recycle({
         }),
 
       Streams.getVisitorStream()
+        .timeout(2000)
+        .catch( e => Rx.Observable.of(e) ) // combine w/ email from zaf
         .reducer( (state, pendoVisitor) => {
+
+          if (R.is(Error, pendoVisitor)) {
+            state.error = "No Visitor Found";
+            return state;
+          }
+
           // add better way to get email
+          console.log(pendoVisitor);
           state.id = pendoVisitor.id;
           state.email = pendoVisitor.id;
           state.name = pendoVisitor.displayName || state.email;
@@ -67,18 +79,22 @@ const Header = recycle({
       <div className="header" style={{'background-color':props.muiTheme.palette.primary1Color}}>
         <img src={state.avatarUrl} alt="" height="40px" width="40px" />
         <h2>
-          {state.name}
-          <div>
-            from {state.organizations.join(', ')}
-          </div>
+          {state.name || state.error}
+          {!state.error &&
+            <div>
+              from {state.organizations.join(', ')}
+            </div>
+          }
         </h2>
         {/*This is how you make comments*/}
         {/*<button className="change-user">Change user</button>*/}
-        <IconButton iconClassName='material-icons' iconStyle={{color:'#fff'}}
-          style={{position: 'absolute', top: '5px', right: '5px'}}
-          tooltip='Open in Pendo' tooltipPosition='bottom-left'>
-          open_in_new
-        </IconButton>
+        {!state.error &&
+          <IconButton iconClassName='material-icons' iconStyle={{color:'#fff'}}
+            style={{position: 'absolute', top: '5px', right: '5px'}}
+            tooltip='Open in Pendo' tooltipPosition='bottom-left'>
+            open_in_new
+          </IconButton>
+        }
       </div>
     );
   }
