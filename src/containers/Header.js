@@ -42,7 +42,7 @@ const Header = recycle({
         }),
 
       Streams.getVisitorStream()
-        .timeout(2000)
+        .timeout(3000) // 3 seconds
         .catch( e => Rx.Observable.of(e) ) // combine w/ email from zaf
         .reducer( (state, pendoVisitor) => {
 
@@ -52,7 +52,6 @@ const Header = recycle({
           }
 
           // add better way to get email
-          console.log(pendoVisitor);
           state.id = pendoVisitor.id;
           state.email = pendoVisitor.id;
           state.name = pendoVisitor.displayName || state.email;

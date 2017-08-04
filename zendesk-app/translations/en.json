@@ -1,9 +1,9 @@
 {
   "app": {
-    "short_description": "See Pendo data for the ticket submitter",
-    "long_description" : "See Pendo data for the ticket submitter (TODO)",
-    "installation_instructions": "Create a Pendo Integration Key.  Provide during set up of Zendo. (TODO)",
-    "name": "Zendo",
+    "short_description": "Access visitor level product analytics alongside support requests.",
+    "long_description" : "Empower your Support teams with key customer information and contextual product usage data right where they live inside Zendesk. By using the Pendo app, your support agents will be able to close tickets faster by having access to key product and user information right where they live.  \n\n**Know exactly what a user was doing right before a ticket was filed.**  \n\nGet product usage information including features, pages and more that was being used right before the user filed the support ticket.  By having detailed session usage information the support agent has greater context leading to happier, faster support ticket resolution.  \n\n**Key customer information at a visitor and account level.**  \n\nHave better context of a user's profile such as NPS score, usage frequency, depth of understanding of the product and more right alongside the support ticket.",
+    "installation_instructions": "# Pendo Zendesk Installation instructions  \n\n## 1. Create integration key in Pendo  \n\nVisit pendo at https://app.pendo.io/admin/integrationkeys to create an Integration within Pendo that you will use to allow all your Zendesk users to get data from Pendo  \n\nSave this key and use it to fill in the form when installing Pendo.  \n\n## 2. Determine how you will identify your users  \n\nCurrently, Pendo requires your users to be identified by their emails addresses as this is the only identifiable values we can get from Zendesk.  \n\nBy default, if you have used email addresses as the ID for your users for Pendo then we will automatically find your users.  If you didn't use the email address as the ID but did pass it over as metadata to Pendo then you can specify that when you install by clicking the \"Enable searching metadata for use email\" checkbox and filling in the \"Email Field Name\" with the <metadata group>/<metadata field> value.  \n\nFor example, you might use \"agent/email\" or \"salesforce/email\".  You can see the existing options here: https://app.pendo.io/admin/settings (then click the Data Mappings tab).",
+    "name": "Pendo",
     "parameters": {
       "token": { "label": "Pendo Integration Token" },
       "enable-user-lookup-field"  : { "label": "Enable searching metadata for user email?" },
