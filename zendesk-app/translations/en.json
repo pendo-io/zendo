@@ -5,7 +5,7 @@
     "installation_instructions": "# Pendo Zendesk Installation instructions  \n\n## 1. Create integration key in Pendo  \n\nVisit pendo at https://app.pendo.io/admin/integrationkeys to create an Integration within Pendo that you will use to allow all your Zendesk users to get data from Pendo  \n\nSave this key and use it to fill in the form when installing Pendo.  \n\n## 2. Determine how you will identify your users  \n\nCurrently, Pendo requires your users to be identified by their emails addresses as this is the only identifiable values we can get from Zendesk.  \n\nBy default, if you have used email addresses as the ID for your users for Pendo then we will automatically find your users.  If you didn't use the email address as the ID but did pass it over as metadata to Pendo then you can specify that when you install by clicking the \"Enable searching metadata for use email\" checkbox and filling in the \"Email Field Name\" with the <metadata group>/<metadata field> value.  \n\nFor example, you might use \"agent/email\" or \"salesforce/email\".  You can see the existing options here: https://app.pendo.io/admin/settings (then click the Data Mappings tab).",
     "name": "Pendo",
     "parameters": {
-      "token": { "label": "Pendo Integration Token" },
+      "token": { "label": "Pendo Integration Key" },
       "enable-user-lookup-field"  : { "label": "Enable searching metadata for user email?" },
       "pendo-lookup-field": { "label": "Email Field Name" }
     }

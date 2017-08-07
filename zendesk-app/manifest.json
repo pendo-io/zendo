@@ -20,7 +20,7 @@
       "name":     "token",
       "type":     "text",
       "required": true,
-      "secure":   true
+      "secure":   false
     },
     {
       "name":     "pendo-lookup-field",

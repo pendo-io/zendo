@@ -23,9 +23,8 @@ class KKV {
 
 const Storage = {
   ticketStore: null,
-  userStore: null,
-  accountStore: null,
-
+  commonStore: null,
+  
   composeKey (...keyPieces) {
     return keyPieces.join(':');
   },
@@ -39,6 +38,14 @@ const Storage = {
   Observable$: new Rx.Subject(),
   emitEvent (evt) {
     Storage.Observable$.next(evt);
+  },
+
+  getCommonStorage () {
+    if (!Storage.commonStore) {
+      Storage.commonStore = new KKV('common', (evt) => Storage.emitEvent(evt) );
+    }
+
+    return Storage.commonStore;
   },
 
   getTicketStorage (ticketId) {

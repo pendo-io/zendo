@@ -1,6 +1,7 @@
 {
   "name": "zendo",
   "version": "0.1.0",
+  "homepage":".",
   "private": true,
   "devDependencies": {
     "react-scripts": "1.0.7"

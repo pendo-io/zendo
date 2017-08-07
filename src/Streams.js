@@ -102,16 +102,24 @@ const Streams = {
   },
 
   getFilter (filterKey) {
-    return ZAF.getTicketId()
-      .map( (ticketId) => Storage.getTicketStorage(ticketId).read(filterKey) )
+    return Rx.Observable.of(
+      Storage.getCommonStorage().read(filterKey))
+    )
       .map( (filter) => {
         const result = filter || [];
-
-        if (!filter) {
-          Storage.getTicketStorage().write(filterKey, result);
-        }
         return result;
       })
+
+    // return ZAF.getTicketId()
+    //   .map( (ticketId) => Storage.getTicketStorage(ticketId).read(filterKey) )
+    //   .map( (filter) => {
+    //     const result = filter || [];
+    //
+    //     if (!filter) {
+    //       Storage.getTicketStorage().write(filterKey, result);
+    //     }
+    //     return result;
+    //   })
   },
 
   watchTicketStorage (filterKey) {
