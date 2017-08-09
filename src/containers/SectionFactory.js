@@ -24,7 +24,7 @@ const getVisibleItems = R.pipe((items, filter, isEditing) => {
   R.groupBy(R.prop('group'))
 );
 
-const factory = (type, metadataOb, metadataFilterOb, filterWatcher, metricsOb) => {
+const factory = (type, metadataOb, metadataFilterOb, /*filterWatcher,*/ metricsOb) => {
 
   // note on type: currently expected to be either 'Visitor' or 'Account'.
   // TODO: reimplement this as a Type or Enum to ensure it.
@@ -52,18 +52,17 @@ const factory = (type, metadataOb, metadataFilterOb, filterWatcher, metricsOb) =
             return state;
           }),
 
-        // TODO: figure out how to combine metadataFilterOb and filterWatcher
         metadataFilterOb
           .reducer( (state, filter) => {
             state.filter = filter;
             return state;
           }),
 
-        filterWatcher
-          .reducer( (state, filter) => {
-            state.filter = filter;
-            return state;
-          }),
+        // filterWatcher
+        //   .reducer( (state, filter) => {
+        //     state.filter = filter;
+        //     return state;
+        //   }),
 
         metadataOb
           .reducer( (state, md) => {

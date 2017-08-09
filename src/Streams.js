@@ -103,10 +103,15 @@ const Streams = {
 
   getFilter (filterKey) {
     return Rx.Observable.of(
-      Storage.getCommonStorage().read(filterKey))
+      Storage.getCommonStorage().read(filterKey)
     )
       .map( (filter) => {
         const result = filter || [];
+
+        if (!filter) {
+          Storage.getCommonStorage().write(filterKey, result);
+        }
+
         return result;
       })
 
@@ -122,20 +127,29 @@ const Streams = {
     //   })
   },
 
-  watchTicketStorage (filterKey) {
-    return ZAF.getTicketId()
-      .combineLatest(Storage.fromEvent())
-      .filter(([ticketId, evt]) => {
-        // console.log("watchTicketStorage.filter: ", ticketId, evt.key);
-        return evt.key === Storage.composeKey(ticketId, filterKey);
-      })
-      .map(([ticketId, evt]) => {
-        // console.log("watchTicketStorage.map: ", ticketId, evt.newValue);
-        return evt.newValue;
-      })
+  watchStorage (key) {
+    return Storage.fromEvent()
+      // .map( evt => {console.log(evt); return evt; } )
+      .filter( evt => R.contains(key, evt.key) )
+      .map( evt => evt.newValue )
       .distinctUntilChanged()
-      .catch( err => Rx.Observable.of(err) );
+      .catch( err => Rx.Observable.of(err) )
   },
+
+  // watchTicketStorage (filterKey) {
+  //   return ZAF.getTicketId()
+  //     .combineLatest(Storage.fromEvent())
+  //     .filter(([ticketId, evt]) => {
+  //       // console.log("watchTicketStorage.filter: ", ticketId, evt.key);
+  //       return evt.key === Storage.composeKey(ticketId, filterKey);
+  //     })
+  //     .map(([ticketId, evt]) => {
+  //       // console.log("watchTicketStorage.map: ", ticketId, evt.newValue);
+  //       return evt.newValue;
+  //     })
+  //     .distinctUntilChanged()
+  //     .catch( err => Rx.Observable.of(err) );
+  // },
 
   getAccountMetrics: R.memoize(() => {
     return Rx.Observable.merge(

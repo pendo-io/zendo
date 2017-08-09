@@ -24,7 +24,7 @@ class KKV {
 const Storage = {
   ticketStore: null,
   commonStore: null,
-  
+
   composeKey (...keyPieces) {
     return keyPieces.join(':');
   },
@@ -37,6 +37,7 @@ const Storage = {
 
   Observable$: new Rx.Subject(),
   emitEvent (evt) {
+    // console.log(evt);
     Storage.Observable$.next(evt);
   },
 

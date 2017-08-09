@@ -21,16 +21,20 @@ import Streams from '../Streams';
 const VisitorSection = factory(
   'Visitor',
   Streams.getMetadata('visitor'),
-  Streams.getFilter('visitor-metadata-filter'),
-  Streams.watchTicketStorage('visitor-metadata-filter'),
+  Streams.getFilter('visitor-metadata-filter')
+    .merge(
+      Streams.watchStorage('visitor-metadata-filter')
+    ),
   Streams.getVisitorMetrics()
 );
 
 const AccountSection = factory(
   'Account',
   Streams.getMetadata('account'),
-  Streams.getFilter('account-metadata-filter'),
-  Streams.watchTicketStorage('account-metadata-filter'),
+  Streams.getFilter('account-metadata-filter')
+    .merge(
+      Streams.watchStorage('account-metadata-filter')
+    ),
   Streams.getAccountMetrics()
 )
 

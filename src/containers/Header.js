@@ -77,7 +77,7 @@ const Header = recycle({
     return (
       <div className="header" style={{'background-color':props.muiTheme.palette.primary1Color}}>
         <img src={state.avatarUrl} alt="" height="40px" width="40px" />
-        <h2>
+        <h2 title={state.name || ''}>
           {state.name || state.error}
           {!state.error &&
             <div>

@@ -10,7 +10,7 @@ export const ToggleMetadataAction = (type, groupName, item) => {
   // persist change
   const key = type.toLowerCase() === 'visitor' ? 'visitor-metadata-filter' : 'account-metadata-filter';
 
-  const tStore = Storage.getTicketStorage();
+  const tStore = Storage.getCommonStorage();
   const filter = tStore.read(key);
 
   const newFilter = R.concat(R.reject(R.propEq('key', groupName+'-'+item.key), filter),

@@ -15,6 +15,10 @@
   margin-left: 10px;
   font-size: 1.3em;
   vertical-align: top;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 230px;
 }
 
 .header h2 div {
