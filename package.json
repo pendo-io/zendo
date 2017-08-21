@@ -1,6 +1,6 @@
 {
-  "name": "zendo",
-  "version": "0.1.0",
+  "name": "Pendo",
+  "version": "0.1.1",
   "homepage":".",
   "private": true,
   "devDependencies": {
