@@ -7,7 +7,15 @@ import dateformat from 'dateformat';
 
 const applySchema = (value, schema) => {
   if (schema.Type === 'time' && !!value) {
-    return dateformat(new Date(value), "fullDate");
+    try {
+      return dateformat(new Date(value), "fullDate");
+    } catch(e) {
+      return "Invalid Date";
+    }
+  }
+
+  if (schema.Type === 'boolean') {
+    return Boolean(value).toString();
   }
 
   return value;

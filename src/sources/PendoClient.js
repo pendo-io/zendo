@@ -13,7 +13,25 @@ function checkStatus(response) {
   }
 }
 
-// TODO: externalize URLs
+/*
+* Takes a Pendo metadata fieldname like `agent/email` and modifies to force
+* it to be evaluated in the lower case.
+*/
+const toLowerify = (mdFieldName) => {
+  const lc = '_lc_';
+  const parts = mdFieldName.split('/');
+
+  if (parts.length !== 2) {
+    throw new Error("invalid metadata field");
+  }
+
+  const key = parts[1];
+  if (R.startsWith(lc, key)) {
+    return mdFieldName;
+  } else {
+    return [parts[0], lc+key].join('/');
+  }
+}
 
 const Pendo = {
 
@@ -43,6 +61,7 @@ const Pendo = {
   },
 
   findUsersByField (token, field, email) {
+    field = toLowerify(field);
     return Rx.Observable.create((observer) => {
       fetch(`${Pendo.url}/api/v1/visitor/metadata/${field}/${email}`, {
         method: 'GET',

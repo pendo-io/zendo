@@ -2,8 +2,8 @@
   "name": "Pendo",
   "author": {
     "name": "brec-c",
-    "email": "brec@pendo.io",
-    "url": "https://pendo.io"
+    "email": "help@pendo.io",
+    "url": "https://www.pendo.io"
   },
   "defaultLocale": "en",
   "private": false,
@@ -12,7 +12,7 @@
       "ticket_sidebar": "assets/index.html"
     }
   },
-  "version": "1.0",
+  "version": "1.1",
   "frameworkVersion": "2.0",
   "parameters": [
     {

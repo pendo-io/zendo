@@ -9,6 +9,9 @@ import Subheader from "material-ui/Subheader";
 import MetricsList from '../components/MetricsList';
 
 const getVisibleItems = R.pipe((items, filter, isEditing) => {
+
+  items = R.reject((i => i.schema.isHidden), items);
+
   const isVisible = o => o.isVisible
   filter = R.filter(isVisible, filter);
 

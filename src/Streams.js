@@ -12,6 +12,21 @@ import {
   NumUsers
 } from './aggregations';
 
+
+// strategy for finding user by either ID or by metadata field
+// - get email from ZD
+// - check preferences (local storage) to see if strategy is already determined
+// - get schema for visitor from Pendo, loop over fields looking to see if any contain word email
+// - attempt to lookup by ID.  if 404, then loop through candidate fields and try each until not 404 returned
+// - save the option that worked as the preference.
+
+// perhaps should create a type that works for either ID lookup or by metadata then can get from preferences and not
+// care which type it is
+//
+// type: url, parameters, ??
+//
+
+
 const Streams = {
 
   getVisitorStream: R.memoize(() => {
@@ -114,42 +129,15 @@ const Streams = {
 
         return result;
       })
-
-    // return ZAF.getTicketId()
-    //   .map( (ticketId) => Storage.getTicketStorage(ticketId).read(filterKey) )
-    //   .map( (filter) => {
-    //     const result = filter || [];
-    //
-    //     if (!filter) {
-    //       Storage.getTicketStorage().write(filterKey, result);
-    //     }
-    //     return result;
-    //   })
   },
 
   watchStorage (key) {
     return Storage.fromEvent()
-      // .map( evt => {console.log(evt); return evt; } )
       .filter( evt => R.contains(key, evt.key) )
       .map( evt => evt.newValue )
       .distinctUntilChanged()
       .catch( err => Rx.Observable.of(err) )
   },
-
-  // watchTicketStorage (filterKey) {
-  //   return ZAF.getTicketId()
-  //     .combineLatest(Storage.fromEvent())
-  //     .filter(([ticketId, evt]) => {
-  //       // console.log("watchTicketStorage.filter: ", ticketId, evt.key);
-  //       return evt.key === Storage.composeKey(ticketId, filterKey);
-  //     })
-  //     .map(([ticketId, evt]) => {
-  //       // console.log("watchTicketStorage.map: ", ticketId, evt.newValue);
-  //       return evt.newValue;
-  //     })
-  //     .distinctUntilChanged()
-  //     .catch( err => Rx.Observable.of(err) );
-  // },
 
   getAccountMetrics: R.memoize(() => {
     return Rx.Observable.merge(
