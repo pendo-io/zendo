@@ -29,7 +29,7 @@ const lookupItem = (item, lookupMap) => {
   if (!lookupMap[item.type][id]) return `${item.type} (${id})`;
 
   const model = lookupMap[item.type][id];
-  console.log(model);
+  // console.log(model);
 
   return `${model.name}`;
 }
@@ -76,7 +76,7 @@ const Timeline = recycle({
 
       Streams.getPendoModels()
         .reducer( (state, models) => {
-          console.log(models);
+          // console.log(models);
           const guides = models[0],
             pages = models[1],
             features = models[2];
@@ -85,7 +85,7 @@ const Timeline = recycle({
           pages.map((p) => state.lookup.page[p.id] = p);
           features.map((f) => state.lookup.feature[f.id] = f);
 
-          console.log(state.lookup);
+          // console.log(state.lookup);
 
           return state;
         })

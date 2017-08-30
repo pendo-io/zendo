@@ -23,6 +23,20 @@ const resize = (client, width='100%', height='800px') => {
 const zaf$ = new Rx.BehaviorSubject(initZAF());
 
 const ZAF = {
+  getCurrentUser () {
+    return zaf$.flatMap( (client) => {
+      return Rx.Observable.fromPromise(client.get('currentUser'));
+    }).map( (data) => {
+      return data['currentUser'];
+    })
+  },
+
+  getCurrentAccount () {
+    return zaf$.flatMap( (client) => {
+      return Rx.Observable.fromPromise(client.get('currentAccount'))
+    }).map( (data) => data['currentAccount'] )
+  },
+
   getRequester () {
     return zaf$.flatMap( (client) => {
       return Rx.Observable.fromPromise(client.get(['ticket.requester']))

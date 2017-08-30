@@ -17,6 +17,7 @@ import '../styles/MDListContainer.css';
 
 import factory from '../containers/SectionFactory';
 import Streams from '../Streams';
+import '../InstallPendo'
 
 const VisitorSection = factory(
   'Visitor',
