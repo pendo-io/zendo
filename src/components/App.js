@@ -22,20 +22,22 @@ import '../InstallPendo'
 const VisitorSection = factory(
   'Visitor',
   Streams.getMetadata('visitor'),
-  Streams.getFilter('visitor-metadata-filter')
-    .merge(
-      Streams.watchStorage('visitor-metadata-filter')
-    ),
+  // Streams.getFilter('visitor-metadata-filter')
+  //   .merge(
+  //     Streams.watchStorage('visitor-metadata-filter')
+  //   ),
+  Streams.getMetadataFilter('visitor-metadata-filter'),
   Streams.getVisitorMetrics()
 );
 
 const AccountSection = factory(
   'Account',
   Streams.getMetadata('account'),
-  Streams.getFilter('account-metadata-filter')
-    .merge(
-      Streams.watchStorage('account-metadata-filter')
-    ),
+  // Streams.getFilter('account-metadata-filter')
+  //   .merge(
+  //     Streams.watchStorage('account-metadata-filter')
+  //   ),
+  Streams.getMetadataFilter('account-metadata-filter'),
   Streams.getAccountMetrics()
 )
 

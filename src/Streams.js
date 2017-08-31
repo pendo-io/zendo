@@ -116,6 +116,13 @@ const Streams = {
     return ZAF.getRequester().map( (reqstr) => reqstr.avatarUrl );
   },
 
+  getMetadataFilter (filterKey) {
+    return Streams.getFilter(filterKey)
+      .merge(
+        Streams.watchStorage(filterKey)
+      )
+  },
+
   getFilter (filterKey) {
     return Rx.Observable.of(
       Storage.getCommonStorage().read(filterKey)

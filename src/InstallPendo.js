@@ -2,23 +2,15 @@ import R from 'ramda';
 import ZAF from './sources/ZAFClient';
 
 const appKey = '8643e4cf-c97f-42ae-67b4-c1263e01c97b';
-const doInstall = (apiKey, userObj, accountObj) => {
+const doInstall = (apiKey, visitor, account) => {
   (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=[];
     v=['initialize','identify','updateOptions','pageLoad'];for(w=0,x=v.length;w<x;++w)(function(m){
     o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
     y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
     z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
 
-  // Call this whenever information about your visitors becomes available
-  // Please use Strings, Numbers, or Bools for value types.
-
-  console.log(apiKey, userObj, accountObj);
-
-  /* eslint-disable no-undef */
-  pendo.initialize({
-    visitor: userObj,
-    account: accountObj
-  });
+    /* eslint-disable no-undef */
+    pendo.initialize({ visitor, account });
 }
 
 ZAF.getCurrentUser()

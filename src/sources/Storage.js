@@ -1,10 +1,29 @@
 import Rx from 'rxjs';
 import Store from '../vendor/es6-store.js';
 
+class MemStore {
+
+  constructor () {
+    this.map = {};
+  }
+
+  get(key) {
+    return this.map[key];
+  }
+
+  set(key, value) {
+    this.map[key] = value;
+  }
+}
+
 class KKV {
   constructor(shardKey, onChange) {
     this.shardKey = shardKey;
-    this.store = new Store(shardKey);
+    if (this.isAvailable()) {
+      this.store = new Store(shardKey);
+    } else {
+      this.store = new MemStore(); // TODO -- Test
+    }
     this.onChange = onChange;
   }
 
@@ -18,6 +37,17 @@ class KKV {
       key: Storage.composeKey(this.shardKey, key),
       newValue: value
     })
+  }
+
+  isAvailable () {
+    let test = 'test';
+    try {
+       localStorage.setItem(test, test);
+       localStorage.removeItem(test);
+       return true;
+    } catch(e) {
+       return false;
+    }
   }
 }
 
@@ -37,7 +67,6 @@ const Storage = {
 
   Observable$: new Rx.Subject(),
   emitEvent (evt) {
-    // console.log(evt);
     Storage.Observable$.next(evt);
   },
 
@@ -56,17 +85,6 @@ const Storage = {
 
     return Storage.ticketStore;
   },
-
-  isAvailable () {
-    let test = 'test';
-    try {
-       localStorage.setItem(test, test);
-       localStorage.removeItem(test);
-       return true;
-    } catch(e) {
-       return false;
-    }
-  }
 }
 
 export default Storage;
