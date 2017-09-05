@@ -16,34 +16,21 @@ import Timeline from '../containers/Timeline';
 import '../styles/MDListContainer.css';
 
 import factory from '../containers/SectionFactory';
+import AccountSection from '../containers/AccountSection';
+
 import Streams from '../Streams';
 import '../InstallPendo'
 
-const VisitorSection = factory(
+const VisitorMD = factory(
   'Visitor',
   Streams.getMetadata('visitor'),
-  // Streams.getFilter('visitor-metadata-filter')
-  //   .merge(
-  //     Streams.watchStorage('visitor-metadata-filter')
-  //   ),
   Streams.getMetadataFilter('visitor-metadata-filter'),
   Streams.getVisitorMetrics()
 );
 
-const AccountSection = factory(
-  'Account',
-  Streams.getMetadata('account'),
-  // Streams.getFilter('account-metadata-filter')
-  //   .merge(
-  //     Streams.watchStorage('account-metadata-filter')
-  //   ),
-  Streams.getMetadataFilter('account-metadata-filter'),
-  Streams.getAccountMetrics()
-)
-
 const Info = () => (
   <div>
-    <VisitorSection/>
+    <VisitorMD/>
     <AccountSection/>
   </div>
 )

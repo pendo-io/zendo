@@ -37,7 +37,8 @@ const factory = (type, metadataOb, metadataFilterOb, /*filterWatcher,*/ metricsO
       items: [],
       filter: [],
       isEditing: false,
-      metrics: []
+      metrics: [],
+      hasError: false
     },
     update (sources) {
       return [
@@ -60,12 +61,6 @@ const factory = (type, metadataOb, metadataFilterOb, /*filterWatcher,*/ metricsO
             state.filter = filter;
             return state;
           }),
-
-        // filterWatcher
-        //   .reducer( (state, filter) => {
-        //     state.filter = filter;
-        //     return state;
-        //   }),
 
         metadataOb
           .reducer( (state, md) => {
@@ -100,12 +95,14 @@ const factory = (type, metadataOb, metadataFilterOb, /*filterWatcher,*/ metricsO
       return (
         <div>
           <Subheader>{label} Info</Subheader>
-          <Paper zDepth={1} style={{margin: '5px 5px 15px'}}>
-            {!state.isEditing &&
-              <MetricsList metrics={state.metrics} />
-            }
-            <MDList items={getVisibleItems(state.items, state.filter, state.isEditing)} isEditing={state.isEditing} type={label}/>
-          </Paper>
+          {!state.hasError &&
+            <Paper zDepth={1} style={{margin: '5px 5px 15px'}}>
+              {!state.isEditing &&
+                <MetricsList metrics={state.metrics} />
+              }
+              <MDList items={getVisibleItems(state.items, state.filter, state.isEditing)} isEditing={state.isEditing} type={label}/>
+            </Paper>
+          }
         </div>
       )
     }

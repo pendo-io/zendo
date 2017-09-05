@@ -44,6 +44,11 @@ const Streams = {
     .take(1)
     .subscribe(
       (n) => {
+        // temp, testing no account for a visitor
+        // n.account = {id: ""};
+        // n.accountId = "";
+        // n.accountIds = null;
+        //
         $.next(n)
         obs.complete();
       },
@@ -60,8 +65,15 @@ const Streams = {
     const obs = Rx.Observable.zip(
       ZAF.getApiToken(),
       Streams.getVisitorStream()
-        .map((v) => v.accountIds[0])
-    ).flatMap( ([token, acctId]) => Pendo.findAccountStream(token, acctId))
+        .map((v) => {
+          if (!v.accountIds)
+            return null;
+          return v.accountIds[0]
+        })
+    ).flatMap( ([token, acctId]) => {
+      if (!acctId) throw Error('No account')
+      return Pendo.findAccountStream(token, acctId)
+    })
     .subscribe(
       (n) => {
         $.next(n)
@@ -109,7 +121,8 @@ const Streams = {
 
         const mdP = R.mergeDeepLeft(aMD, schema);
         return mdP;
-      });
+      })
+      .catch( e => Rx.Observable.of(e) );
   }),
 
   getAvatarUrlStream () {

@@ -17,6 +17,7 @@ const Header = recycle({
     name: '',
     email: '',
     organizations: [],
+    canOpen: false,
     error: null
   },
   update (sources) {
@@ -30,7 +31,6 @@ const Header = recycle({
       sources.select(IconButton)
         .addListener('onClick')
         .reducer((state) => {
-          // TODO: fix this, it might not be email
           window.open(`${Pendo.url}/visitor/${state.id}`, '_newtab');
           return state;
         }),
@@ -42,8 +42,7 @@ const Header = recycle({
         }),
 
       Streams.getVisitorStream()
-        .timeout(3000) // 3 seconds
-        .catch( e => Rx.Observable.of(e) ) // combine w/ email from zaf
+        .catch( e => Rx.Observable.of(e) )
         .reducer( (state, pendoVisitor) => {
 
           if (R.is(Error, pendoVisitor)) {
@@ -55,11 +54,19 @@ const Header = recycle({
           state.id = pendoVisitor.id;
           state.email = pendoVisitor.id;
           state.name = pendoVisitor.displayName || state.email;
+
+          state.canOpen = true;
+
           return state;
         }),
 
       Streams.getAccountStream()
+        .catch( e => Rx.Observable.of(e) )
         .reducer( (state, pendoAccount) => {
+          if (R.is(Error, pendoAccount)) {
+            console.log("Got error", pendoAccount)
+            return state;
+          }
           state.organizations = [pendoAccount.name || pendoAccount.id];
           return state;
         })
@@ -79,15 +86,20 @@ const Header = recycle({
         <img src={state.avatarUrl} alt="" height="40px" width="40px" />
         <h2 title={state.name || ''}>
           {state.name || state.error}
-          {!state.error &&
+          {!state.error && !!state.organizations.length &&
             <div>
               from {state.organizations.join(', ')}
+            </div>
+          }
+          {!state.error && !state.organizations.length &&
+            <div>
+              <i>No Account for Visitor</i>
             </div>
           }
         </h2>
         {/*This is how you make comments*/}
         {/*<button className="change-user">Change user</button>*/}
-        {!state.error &&
+        {!state.error && state.canOpen &&
           <IconButton iconClassName='material-icons' iconStyle={{color:'#fff'}}
             style={{position: 'absolute', top: '5px', right: '5px'}}
             tooltip='Open in Pendo' tooltipPosition='bottom-left'>
