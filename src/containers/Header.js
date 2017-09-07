@@ -5,6 +5,7 @@ import recycle from 'recycle';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import IconButton from 'material-ui/IconButton';
 import Streams from '../Streams';
+import ZAF from '../sources/ZAFClient';
 
 import Pendo from '../sources/PendoClient';
 
@@ -16,6 +17,7 @@ const Header = recycle({
     id: '',
     name: '',
     email: '',
+    zdEmail: '',
     organizations: [],
     canOpen: false,
     error: null
@@ -32,6 +34,12 @@ const Header = recycle({
         .addListener('onClick')
         .reducer((state) => {
           window.open(`${Pendo.url}/visitor/${state.id}`, '_newtab');
+          return state;
+        }),
+
+      ZAF.getEmail()
+        .reducer((state, zdEmail) => {
+          state.zdEmail = zdEmail || 'email missing';
           return state;
         }),
 
@@ -94,6 +102,11 @@ const Header = recycle({
           {!state.error && !state.organizations.length &&
             <div>
               <i>No Account for Visitor</i>
+            </div>
+          }
+          {!!state.error &&
+            <div>
+              unable to find {state.zdEmail}
             </div>
           }
         </h2>

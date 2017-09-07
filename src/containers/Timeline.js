@@ -1,5 +1,6 @@
 import React/*, { Component }*/ from 'react';
 import recycle from 'recycle';
+import R from 'ramda';
 
 import Paper   from 'material-ui/Paper';
 import Subheader from 'material-ui/Subheader';
@@ -33,6 +34,9 @@ const lookupItem = (item, lookupMap) => {
 
   return `${model.name}`;
 }
+
+// talkdesk issue
+// https://app.pendo.io/api/v1/visitor/5988e5c6c46ecd591b84cfa5/history?starttime=1504549858000
 
 const getIcon = (type) => {
   if (type === 'page') return (<EditorInsertDriveFile/>);
@@ -70,6 +74,11 @@ const Timeline = recycle({
 
       Streams.getVisitorHistory()
         .reducer( (state, history) => {
+          if (R.is(Error, history)) {
+            console.log("Got error", history);
+            state.error = history;
+            return state;
+          }
           state.history = history;
           return state;
         }),

@@ -38,17 +38,12 @@ const Streams = {
       ZAF.getIDLookupField()
     ).flatMap( ([email, token, field]) => {
       return field === 'ID' || !field ?
-        Pendo.fetchUserById(token, email) :
+        Pendo.fetchUserById(token, null) : //email) :
         Pendo.findUsersByField(token, field, email);
     })
     .take(1)
     .subscribe(
       (n) => {
-        // temp, testing no account for a visitor
-        // n.account = {id: ""};
-        // n.accountId = "";
-        // n.accountIds = null;
-        //
         $.next(n)
         obs.complete();
       },

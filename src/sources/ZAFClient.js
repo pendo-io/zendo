@@ -46,7 +46,7 @@ const ZAF = {
   getTicket () {
     return zaf$.flatMap( (client) => {
       return Rx.Observable.fromPromise(client.get(['ticket']))
-    }).map( (data) => data['ticket'] );
+    }).map( (data) => data['ticket'] )
   },
 
   getTicketCreateDate() {
@@ -56,7 +56,7 @@ const ZAF = {
   },
 
   getEmail () {
-    return ZAF.getRequester().map( (requester) => requester.email );
+    return ZAF.getRequester().map( (requester) => requester.email || requester.name );
   },
 
   getMetadata () {
