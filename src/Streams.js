@@ -38,7 +38,7 @@ const Streams = {
       ZAF.getIDLookupField()
     ).flatMap( ([email, token, field]) => {
       return field === 'ID' || !field ?
-        Pendo.fetchUserById(token, null) : //email) :
+        Pendo.fetchUserById(token, email) :
         Pendo.findUsersByField(token, field, email);
     })
     .take(1)
