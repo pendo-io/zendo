@@ -1,6 +1,7 @@
 import Rx from 'rxjs';
 import R from 'ramda';
-// import Pendo from './PendoClient';
+import Pendo from './PendoClient';
+import Storage from './Storage';
 
 const initZAF = R.memoize(() => {
   /* eslint-disable no-undef */
@@ -18,6 +19,10 @@ const resize = (client, width='100%', height='800px') => {
     width: width,
     height: height
   });
+}
+
+const initStorage = (ticketId) => {
+  Storage.getTicketStorage(ticketId);
 }
 
 const zaf$ = new Rx.BehaviorSubject(initZAF());
@@ -88,10 +93,10 @@ const ZAF = {
 
 
 zaf$.subscribe(resize, (e) => console.error(e) );
+ZAF.getTicketId()
+  .subscribe(initStorage, console.error);
 
-// TODO: part of larger refactor
-// zaf$.subscribe(() => {
-//   ZAF.getApiToken().subscribe(Pendo.initialize);
-// });
+ZAF.getApiToken().subscribe(Pendo.initialize);
+
 
 export default ZAF;
