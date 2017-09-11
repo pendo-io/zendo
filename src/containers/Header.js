@@ -60,7 +60,7 @@ const Header = recycle({
 
           // add better way to get email
           state.id = pendoVisitor.id;
-          state.email = pendoVisitor.id;
+          state.email = pendoVisitor.email || pendoVisitor.id;
           state.name = pendoVisitor.displayName || state.email;
 
           state.canOpen = true;

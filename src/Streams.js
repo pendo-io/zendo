@@ -32,20 +32,35 @@ const Streams = {
   getVisitorStream: R.memoize(() => {
     const $ = new Rx.AsyncSubject();
 
+    let lookup = null;
+
     const obs = Rx.Observable.zip(
       ZAF.getEmail(),
       ZAF.getApiToken(),
       ZAF.getIDLookupField()
     ).flatMap( ([email, token, field]) => {
+      lookup = field;
       return field === 'ID' || !field ?
         Pendo.fetchUserById(token, email) :
         Pendo.findUsersByField(token, field, email);
     })
     .take(1)
+    .map((visitor) => {
+      // let's fix email for the visitor
+      if (lookup === 'ID' || !lookup) {
+        visitor.email = visitor.id;
+      } else {
+        let parts = lookup.split('/');
+        let email = visitor.metadata[parts[0]][parts[1]];
+        // console.log(parts, email);
+        visitor.email = email;
+      }
+      return visitor;
+    })
     .subscribe(
       (n) => {
         $.next(n)
-        obs.complete();
+        obs.complete(); // XXX not sure why this is needed
       },
       (e) => $.error(e),
       (c) => $.complete(c)

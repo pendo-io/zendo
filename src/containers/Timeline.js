@@ -1,15 +1,18 @@
-import React/*, { Component }*/ from 'react';
+import React   from 'react';
 import recycle from 'recycle';
-import R from 'ramda';
+import R       from 'ramda';
+import Rx      from 'rxjs';
 
-import Paper   from 'material-ui/Paper';
-import Subheader from 'material-ui/Subheader';
+import Paper            from 'material-ui/Paper';
+import Subheader        from 'material-ui/Subheader';
 import {List, ListItem} from 'material-ui/List';
+import DatePicker       from 'material-ui/DatePicker';
+import TimePicker       from 'material-ui/TimePicker';
 
-import ActionReportProblem from 'material-ui/svg-icons/action/report-problem';
+import ActionReportProblem   from 'material-ui/svg-icons/action/report-problem';
 import EditorInsertDriveFile from 'material-ui/svg-icons/editor/insert-drive-file';
-import MapsLocalOffer from 'material-ui/svg-icons/maps/local-offer';
-import MapsMap from 'material-ui/svg-icons/maps/map';
+import MapsLocalOffer        from 'material-ui/svg-icons/maps/local-offer';
+import MapsMap               from 'material-ui/svg-icons/maps/map';
 
 import dateformat from 'dateformat';
 
@@ -72,6 +75,7 @@ const Timeline = recycle({
           return state;
         }),
 
+      // Rx.Obser
       Streams.getVisitorHistory()
         .reducer( (state, history) => {
           if (R.is(Error, history)) {
