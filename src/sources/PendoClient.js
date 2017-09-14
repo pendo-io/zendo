@@ -188,13 +188,17 @@ const Pendo = {
         method: 'GET',
         headers: {'X-Pendo-Integration-Key': token}
       })
-        .then( checkStatus )
+        .then( checkStatus ) // if one isn't found then whole request errors
         .then( res => res.json() )
         .then( obj => {
           observer.next(obj);
           observer.complete();
         })
-        .catch( err => observer.error(err) )
+        .catch( err => {
+          // observer.error(err)
+          observer.next([]);
+          observer.complete();
+        })
     })
   }
 };

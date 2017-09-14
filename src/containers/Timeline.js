@@ -95,9 +95,17 @@ const Timeline = recycle({
           return state;
         }),
 
+
+
       observeTimelineStartDate()
         .flatMap((date) => Streams.getPendoModels(date))
+        .catch( e => Rx.Observable.of(e) )
         .reducer( (state, models) => {
+          if (R.is(Error, models)){
+            state.error = models;
+            return state;
+          }
+
           const guides = models[0],
             pages = models[1],
             features = models[2];
