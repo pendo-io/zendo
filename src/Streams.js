@@ -283,15 +283,14 @@ const Streams = {
 
   // TODO: allow for a different time to be specified
 
-  getVisitorHistory: R.memoize(() => {
+  getVisitorHistory: R.memoize((date) => {
     const $ = new Rx.AsyncSubject();
     const obs = Rx.Observable.zip(
       ZAF.getApiToken(),
-      Streams.getVisitorStream().map( (v) => v.id ),
-      ZAF.getTicketCreateDate()
+      Streams.getVisitorStream().map( (v) => v.id )
     )
-      .flatMap( ([token, visitorId, cDate]) => {
-        return Pendo.getVisitorHistory(token, visitorId, cDate.getTime());
+      .flatMap( ([token, visitorId]) => {
+        return Pendo.getVisitorHistory(token, visitorId, date);
       })
       .map(R.reverse)
       .catch( err => Rx.Observable.of(err) )
@@ -306,11 +305,11 @@ const Streams = {
     return $;
   }),
 
-  getPendoModels: R.memoize(() => {
+  getPendoModels: R.memoize((date) => {
     return ZAF.getApiToken()
       .flatMap((token) => {
         return Rx.Observable.zip(
-          Streams.getVisitorHistory()
+          Streams.getVisitorHistory(date)
             .map( (history) => R.filter(R.propEq('type', 'guide'), history) )
             .map( (guides) => R.map(R.prop('guideId'), guides) )
             .flatMap( (guideIds) => Pendo.getGuides(token, guideIds) ),

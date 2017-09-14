@@ -10,7 +10,6 @@ import {
   ListItem
 } from 'material-ui/List';
 import DatePicker       from 'material-ui/DatePicker';
-import TimePicker       from 'material-ui/TimePicker';
 
 import ActionReportProblem   from 'material-ui/svg-icons/action/report-problem';
 import EditorInsertDriveFile from 'material-ui/svg-icons/editor/insert-drive-file';
@@ -21,7 +20,7 @@ import dateformat from 'dateformat';
 
 import Streams from '../Streams';
 import ZAF     from '../sources/ZAFClient';
-import Pendo   from '../sources/PendoClient';
+// import Pendo   from '../sources/PendoClient';
 import Storage from '../sources/Storage';
 
 import {
@@ -31,12 +30,22 @@ import {
 
 const getDay = (d) => dateformat(d, 'fullDate')
 const getTimeOfDay = (d) => dateformat(d, 'longTime')
+
 const lookupItem = (item, lookupMap) => {
   if (item.type === 'ticket') return "Ticket Submitted";
-  const id = item.pageId || item.featureId || item.guideId;
-  if (!lookupMap[item.type][id]) return `${item.type} (${id})`;
-  const model = lookupMap[item.type][id];
-  return `${model.name}`;
+  try {
+    const id = item.pageId || item.featureId || item.guideId;
+    if (!lookupMap[item.type][id]) {
+      console.log(`did not find item ${id} in results for ${item.type}`);
+      return `unrecognized ${item.type}`;
+    } else {
+      const model = lookupMap[item.type][id];
+      console.log(`found ${model.name} for ${item.type}`);
+      return `${model.name}`;
+    }
+  } catch (e) {
+    console.error(e);
+  }
 }
 
 // talkdesk issue
@@ -49,10 +58,19 @@ const getIcon = (type) => {
   else return (<ActionReportProblem/>);
 }
 
-// const onItemTouch = (item) => {
-//   const id = item.pageId || item.featureId || item.guideId;
-//   window.open(`${Pendo.url}/${item.type}s/${id}`, '_newtab');
-// }
+const observeTimelineStartDate = () => {
+  return Rx.Observable.zip(
+    ZAF.getTicketCreateDate(),
+    ZAF.getTicketId()
+      .map( (tId) => Storage.getTicketStorage(tId).read('timeline-date') )
+  )
+    .map( ([defaultDate, savedDate]) => {
+      return (!!savedDate) ? new Date(savedDate) : defaultDate;
+    })
+    .merge(
+      Streams.watchStorage('timeline-date').map( (ts) => new Date(ts) )
+    );
+}
 
 const Timeline = recycle({
   initialState: {
@@ -61,6 +79,7 @@ const Timeline = recycle({
     time: '',
     history: [],
     lookup: {
+      ticket: {},
       page: {},
       feature: {},
       guide: {}
@@ -76,53 +95,35 @@ const Timeline = recycle({
           return state;
         }),
 
-      Streams.getVisitorHistory()
-        .reducer( (state, history) => {
-          if (R.is(Error, history)) {
-            console.log("Got error", history);
-            state.error = history;
-            return state;
-          }
-          state.history = history;
-          return state;
-        }),
-
-      Streams.getPendoModels()
+      observeTimelineStartDate()
+        .flatMap((date) => Streams.getPendoModels(date))
         .reducer( (state, models) => {
           const guides = models[0],
             pages = models[1],
             features = models[2];
 
-          guides.map((g) => state.lookup.guide[g.id] = g);
-          pages.map((p) => state.lookup.page[p.id] = p);
-          features.map((f) => state.lookup.feature[f.id] = f);
+            guides.map((g) => state.lookup.guide[g.id] = g);
+            pages.map((p) => state.lookup.page[p.id] = p);
+            features.map((f) => state.lookup.feature[f.id] = f);
 
           return state;
         }),
 
-      ZAF.getTicketId()
-        .map( (tId) => Storage.getTicketStorage(tId).read('timeline-date') )
-        .merge(Streams.watchStorage('timeline-date'))
-        .map( (ts) => {
-          console.log(ts);
-          let d = !!ts ? new Date(ts) : null;
-          return d;
-        })
-        .merge(
-          ZAF.getTicketCreateDate()
-          .map((date) => [date, 'default'] )
+      observeTimelineStartDate()
+        .mergeMap( date => Streams.getVisitorHistory(date),
+          (date, history) => [date, history]
         )
         .catch( e => Rx.Observable.of(e) )
-        .reducer( (state, date) => {
-          if (R.is(Error, date)){
+        .reducer( (state, [date, h]) => {
+          if (R.is(Error, arguments[1])) {
             state.error = date;
             return state;
           }
 
-          if ((R.is(Array, date) && !state.pickedDate) || ( R.is(Date, date) )) {
-            console.log("did this work?", date);
-            state.pickedDate = date;
-          }
+          h = R.reject( ((item) => item.type === 'untagged'), h);
+
+          state.pickedDate = date;
+          state.history = h;
 
           return state;
         })
@@ -135,6 +136,9 @@ const Timeline = recycle({
     return (
       <div>
         <Subheader>{state.day}</Subheader>
+        {!!state.error &&
+          <h2>{state.error}</h2>
+        }
         {!!state.pickedDate &&
           <DatePicker
             hintText="Controlled Date Input"
@@ -154,9 +158,18 @@ const Timeline = recycle({
               <ListItem
                 onTouchTap={(e) => TimelineItemTouchAction(item)}
                 leftIcon={getIcon(item.type)}
+                primaryText={lookupItem(item, state.lookup)}
+              >
+                <div style={{float:'right', 'font-size':'10px'}}>
+                  {getTimeOfDay(new Date(item.ts))}
+                </div>
+              </ListItem>
+              /*<ListItem
+                onTouchTap={(e) => TimelineItemTouchAction(item)}
+                leftIcon={getIcon(item.type)}
                 primaryText={lookupItem(item, state.lookup)}>
                   <div style={{float: 'right', 'font-size':'10px'}}>{getTimeOfDay(new Date(item.ts))}</div>
-              </ListItem>
+              </ListItem>*/
             )}
           </List>
           {!state.history.length &&

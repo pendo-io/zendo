@@ -130,8 +130,9 @@ const Pendo = {
     });
   },
 
-  getVisitorHistory(token, visitorId, endTime) {
-    const starttime = endTime - (24 * 60 * 60 * 1000);
+  getVisitorHistory(token, visitorId, endDate) {
+    endDate.setHours(0); endDate.setMinutes(0); endDate.setSeconds(0); endDate.setMilliseconds(0);
+    const starttime = endDate.getTime();
     return Rx.Observable.create((observer) => {
       fetch(`${Pendo.url}/api/v1/visitor/${visitorId}/history?starttime=${starttime}`, {
         method: 'GET',
