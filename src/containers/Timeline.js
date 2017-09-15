@@ -138,10 +138,6 @@ const Timeline = recycle({
         }
         {!!state.pickedDate &&
           <div>
-            <Subheader
-              style={{'line-height':'20px'}}
-            >View Timeline for Day:
-            </Subheader>
             <DatePicker
               hintText="Pick a Date"
               value={state.pickedDate}
