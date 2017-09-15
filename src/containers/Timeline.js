@@ -20,7 +20,6 @@ import dateformat from 'dateformat';
 
 import Streams from '../Streams';
 import ZAF     from '../sources/ZAFClient';
-// import Pendo   from '../sources/PendoClient';
 import Storage from '../sources/Storage';
 
 import {
@@ -36,20 +35,15 @@ const lookupItem = (item, lookupMap) => {
   try {
     const id = item.pageId || item.featureId || item.guideId;
     if (!lookupMap[item.type][id]) {
-      console.log(`did not find item ${id} in results for ${item.type}`);
       return `unrecognized ${item.type}`;
     } else {
       const model = lookupMap[item.type][id];
-      console.log(`found ${model.name} for ${item.type}`);
       return `${model.name}`;
     }
   } catch (e) {
     console.error(e);
   }
 }
-
-// talkdesk issue
-// https://app.pendo.io/api/v1/visitor/5988e5c6c46ecd591b84cfa5/history?starttime=1504549858000
 
 const getIcon = (type) => {
   if (type === 'page') return (<EditorInsertDriveFile/>);
@@ -95,8 +89,6 @@ const Timeline = recycle({
           return state;
         }),
 
-
-
       observeTimelineStartDate()
         .flatMap((date) => Streams.getPendoModels(date))
         .catch( e => Rx.Observable.of(e) )
@@ -137,31 +129,29 @@ const Timeline = recycle({
         })
     ]
   },
-  effects (sources) {
-    return []
-  },
   view (props, state) {
     return (
       <div>
-        <Subheader>{state.day}</Subheader>
+        {/*<Subheader>{state.time} on {state.day}</Subheader>*/}
         {!!state.error &&
           <h2>{state.error}</h2>
         }
         {!!state.pickedDate &&
-          <DatePicker
-            hintText="Controlled Date Input"
-            value={state.pickedDate}
-            onChange={(e,date) => PickTimelineDate(date)}
-          />
+          <div>
+            <Subheader
+              style={{'line-height':'20px'}}
+            >View Timeline for Day:
+            </Subheader>
+            <DatePicker
+              hintText="Pick a Date"
+              value={state.pickedDate}
+              formatDate={getDay}
+              onChange={(e,date) => PickTimelineDate(date)}
+            />
+          </div>
         }
         <Paper zDepth={0} style={{margin: '5px 5px 15px'}}>
           <List>
-            <ListItem disabled={true}
-              style={{background: '#fffbe5', border: '1px solid #ecb'}}
-              leftIcon={getIcon('ticket')}
-              primaryText={lookupItem({type:'ticket'})}>
-                <div style={{'float':'right', 'font-size':'10px'}}>{state.time}</div>
-            </ListItem>
             {state.history.map((item) =>
               <ListItem
                 onTouchTap={(e) => TimelineItemTouchAction(item)}
@@ -172,12 +162,6 @@ const Timeline = recycle({
                   {getTimeOfDay(new Date(item.ts))}
                 </div>
               </ListItem>
-              /*<ListItem
-                onTouchTap={(e) => TimelineItemTouchAction(item)}
-                leftIcon={getIcon(item.type)}
-                primaryText={lookupItem(item, state.lookup)}>
-                  <div style={{float: 'right', 'font-size':'10px'}}>{getTimeOfDay(new Date(item.ts))}</div>
-              </ListItem>*/
             )}
           </List>
           {!state.history.length &&

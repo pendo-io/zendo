@@ -70,8 +70,9 @@ const Pendo = {
         .then( checkStatus )
         .then( res => res.json() )
         .then( users => {
+          if (!users || users.length === 0)
+            throw new Error('No Users Found');
           users.map( (user) => observer.next(user) )
-          // observer.next(j);
           observer.complete();
         })
         .catch( err => observer.error(err) )

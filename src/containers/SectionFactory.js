@@ -1,6 +1,7 @@
 import React from 'react';
 import recycle from 'recycle';
 import R from 'ramda';
+import Rx from 'rxjs';
 import MDList from '../components/MDList';
 
 import Paper   from 'material-ui/Paper';
@@ -63,7 +64,13 @@ const factory = (type, metadataOb, metadataFilterOb, /*filterWatcher,*/ metricsO
           }),
 
         metadataOb
+          .catch( e => Rx.Observable.of(e) )
           .reducer( (state, md) => {
+            if ( R.is(Error, md) ) {
+              state.hasError = true;
+              return state;
+            }
+
             const ugh = R.values(R.mapObjIndexed((groupItems, groupName) => {
               return R.values(R.mapObjIndexed((itemValue, itemName) => {
                 return {
@@ -81,7 +88,11 @@ const factory = (type, metadataOb, metadataFilterOb, /*filterWatcher,*/ metricsO
           }),
 
         metricsOb
+          .catch( e => Rx.Observable.of(e) )
           .reducer( (state, list) => {
+              if (R.is(Error, list)) {
+                return state;
+              }
             // console.log("got metrics event", list);
             const tmp = R.concat(state.metrics, R.flatten([list]));
             state.metrics = R.uniqBy(R.prop('title'), tmp);

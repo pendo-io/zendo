@@ -53,7 +53,7 @@ const Header = recycle({
         .catch( e => Rx.Observable.of(e) )
         .reducer( (state, pendoVisitor) => {
 
-          if (R.is(Error, pendoVisitor)) {
+          if (R.is(Error, pendoVisitor) || !pendoVisitor) {
             state.error = "No Visitor Found";
             return state;
           }
@@ -106,7 +106,7 @@ const Header = recycle({
           }
           {!!state.error &&
             <div>
-              unable to find {state.zdEmail}
+              can&#44;t find {state.zdEmail}
             </div>
           }
         </h2>
