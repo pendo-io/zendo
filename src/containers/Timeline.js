@@ -4,7 +4,7 @@ import R       from 'ramda';
 import Rx      from 'rxjs';
 
 import Paper            from 'material-ui/Paper';
-import Subheader        from 'material-ui/Subheader';
+// import Subheader        from 'material-ui/Subheader';
 import {
   List,
   ListItem
@@ -139,7 +139,7 @@ const Timeline = recycle({
         {!!state.pickedDate &&
           <div>
             <DatePicker
-              hintText="Pick a Date"
+              floatingLabelText="Pick a Date"
               value={state.pickedDate}
               formatDate={getDay}
               onChange={(e,date) => PickTimelineDate(date)}

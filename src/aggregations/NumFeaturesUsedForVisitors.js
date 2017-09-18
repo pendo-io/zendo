@@ -19,6 +19,13 @@ const agg = {
 				}
 			},
 			{
+				"filter": {
+					"field": "visitorId",
+					"operator": "==",
+					"value": "brec@pendo.io"
+				}
+			},
+			{
 				"group": {
 					"group": [
 						"visitorId",
@@ -47,17 +54,10 @@ const agg = {
 				}
 			},
 			{
-				"bulkExpand": {
+				"expand": {
 					"visitorInfo": {
 						"visitor": "visitorId"
 					}
-				}
-			},
-			{
-				"filter": {
-					"field": "visitorId",
-					"operator": "==",
-					"value": "brec@pendo.io"
 				}
 			},
 			{
