@@ -3,8 +3,8 @@ import recycle from 'recycle';
 import R       from 'ramda';
 import Rx      from 'rxjs';
 
-import Paper            from 'material-ui/Paper';
-// import Subheader        from 'material-ui/Subheader';
+import Paper        from 'material-ui/Paper';
+import muiThemeable from 'material-ui/styles/muiThemeable';
 import {
   List,
   ListItem
@@ -169,4 +169,4 @@ const Timeline = recycle({
   }
 })
 
-export default Timeline;
+export default muiThemeable()(Timeline);

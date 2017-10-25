@@ -57,7 +57,7 @@ const ZAF = {
   getTicketCreateDate() {
     return ZAF.getTicket()
       .map( (ticket) => ticket.createdAt )
-      .map( (dateStr) => new Date(dateStr) ) //new Date(1501689260706) ) //dateStr) ) // XXX put this back!
+      .map( (dateStr) => new Date(dateStr) )
   },
 
   getEmail () {

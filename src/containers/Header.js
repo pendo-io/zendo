@@ -106,7 +106,7 @@ const Header = recycle({
           }
           {!!state.error &&
             <div>
-              can&#44;t find {state.zdEmail}
+              <i>Can&rsquo;t find: {state.zdEmail}</i>
             </div>
           }
         </h2>
