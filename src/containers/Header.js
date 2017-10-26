@@ -60,8 +60,8 @@ const Header = recycle({
 
           // add better way to get email
           state.id = pendoVisitor.id;
-          state.email = pendoVisitor.email || pendoVisitor.id;
-          state.name = pendoVisitor.displayName || state.email;
+          // state.email = pendoVisitor.email || pendoVisitor.id;
+          state.name = pendoVisitor.displayName; // || state.email;
 
           state.canOpen = true;
 
@@ -92,7 +92,7 @@ const Header = recycle({
     return (
       <div className="header" style={{'background-color':props.muiTheme.palette.primary1Color}}>
         <img src={state.avatarUrl} alt="" height="40px" width="40px" />
-        <h2 title={state.name || ''}>
+        <h2 title={state.name || state.zdEmail}>
           {state.name || state.error}
           {!state.error && !!state.organizations.length &&
             <div>
