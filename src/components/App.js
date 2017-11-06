@@ -60,7 +60,7 @@ const App = () => (
         </Tabs>
         <div className="scroll-area">
           <Switch>
-            <Route path="/info" component={Info} />
+            <Route path="/info" render={Info} />
             <Route path="/timeline" component={Timeline} />
             <Route path="/settings" component={NotBuilt} />
             <Route component={NoMatch} />

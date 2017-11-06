@@ -44,7 +44,7 @@ const Streams = {
         Pendo.fetchUserById(token, email) :
         Pendo.findUsersByField(token, field, email);
     })
-    .take(1)
+    .take(1) // or could reduce?
     .map((visitor) => {
       // let's fix email for the visitor
       if (lookup === 'ID' || !lookup) {
