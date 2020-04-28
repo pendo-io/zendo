@@ -1,6 +1,6 @@
 {
-  "name": "Pendo",
-  "version": "0.1.3",
+  "name": "pendo",
+  "version": "1.5.0",
   "homepage":".",
   "private": true,
   "devDependencies": {

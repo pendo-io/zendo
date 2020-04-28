@@ -41,7 +41,7 @@ const NotBuilt = () => (
 )
 
 const NoMatch = () => (
-  <Redirect to="/timeline" />
+  <Redirect to="/info" />
 )
 
 function findUser() {
@@ -54,8 +54,8 @@ const App = () => (
     <Router>
       <div>
         <Tabs>
-          <Tab label="Timeline" containerElement={<NavLink to="/timeline"/>}/>
           <Tab label="Info" containerElement={<NavLink to="/info"/>} />
+          <Tab label="Timeline" containerElement={<NavLink to="/timeline"/>}/>
           {/*<Tab label="Settings" containerElement={<NavLink to="/settings"/>} /> */}
         </Tabs>
         <div className="scroll-area">
