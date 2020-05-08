@@ -35,7 +35,7 @@ const toLowerify = (mdFieldName) => {
 
 const Pendo = {
 
-  url: process.env.REACT_APP_HOST_ENV === 'production' ? 'https://app.pendo.io' : 'https://pendo-dev.appspot.com',
+  prod: process.env.REACT_APP_HOST_ENV === 'production',
 
   initialize (token) {
   //   // TODO: implement this to partially apply token once to all the functions here
@@ -44,11 +44,33 @@ const Pendo = {
     // R.map((key) => R.partial(Pendo[key], token), R.reject(R.equals('initialize'),R.keys(Pendo)))
   },
 
+  getUrl (token) {
+    if (Pendo.prod === false){
+      const integrationKey = token.split('.')[0];
+      return {
+        url: `https://pendo-dev.appspot.com`,
+        integrationKey
+      };
+    }
+    const [integrationKey, suffix] = token.split('.');
+      if (typeof suffix === 'undefined' || suffix === 'us') {
+        return {
+          url: 'https://app.pendo.io',
+          integrationKey
+        };
+      }
+      return {
+        url: `https://app.${suffix}.pendo.io`,
+        integrationKey
+      };
+  },
+
   fetchUserById (token, email) {
+    const [url, integrationKey] = this.getUrl(token);
     return Rx.Observable.create((observer) => {
-      fetch(`${Pendo.url}/api/v1/visitor/${email}`, {
+      fetch(`${url}/api/v1/visitor/${email}`, {
         method: 'GET',
-        headers: {'X-Pendo-Integration-Key':token}
+        headers: {'X-Pendo-Integration-Key': integrationKey}
       })
         .then( checkStatus )
         .then( res => res.json() )
@@ -61,11 +83,12 @@ const Pendo = {
   },
 
   findUsersByField (token, field, email) {
+    const [url, integrationKey] = this.getUrl(token);
     field = toLowerify(field);
     return Rx.Observable.create((observer) => {
-      fetch(`${Pendo.url}/api/v1/visitor/metadata/${field}/${email}`, {
+      fetch(`${url}/api/v1/visitor/metadata/${field}/${email}`, {
         method: 'GET',
-        headers: {'X-Pendo-Integration-Key':token}
+        headers: {'X-Pendo-Integration-Key': integrationKey}
       })
         .then( checkStatus )
         .then( res => res.json() )
@@ -80,10 +103,11 @@ const Pendo = {
   },
 
   findAccountStream (token, accountId) {
+    const [url, integrationKey] = this.getUrl(token);
     return Rx.Observable.create((observer) => {
-      fetch(`${Pendo.url}/api/v1/account/${accountId}`, {
+      fetch(`${url}/api/v1/account/${accountId}`, {
         method: 'GET',
-        headers: {'X-Pendo-Integration-Key':token}
+        headers: {'X-Pendo-Integration-Key': integrationKey}
       })
         .then( checkStatus )
         .then( res => res.json() )
@@ -96,11 +120,12 @@ const Pendo = {
   },
 
   runAggregation (token, agg) {
+    const [url, integrationKey] = this.getUrl(token);
     return Rx.Observable.create((observer) => {
-      fetch(`${Pendo.url}/api/v1/aggregation`, {
+      fetch(`${url}/api/v1/aggregation`, {
         method: 'POST',
         headers: {
-          'X-Pendo-Integration-Key':token,
+          'X-Pendo-Integration-Key': integrationKey,
           'content-type': 'application/json;charset=utf-8'
         },
         body: JSON.stringify(agg)
@@ -116,10 +141,11 @@ const Pendo = {
   },
 
   getMetadataSchema (token, type) {
+    const [url, integrationKey] = this.getUrl(token);
     return Rx.Observable.create((observer) => {
-      fetch(`${Pendo.url}/api/v1/metadata/schema/${type}`, {
+      fetch(`${url}/api/v1/metadata/schema/${type}`, {
         method: 'GET',
-        headers: {'X-Pendo-Integration-Key': token}
+        headers: {'X-Pendo-Integration-Key': integrationKey}
       })
         .then( checkStatus )
         .then( res => res.json() )
@@ -132,12 +158,13 @@ const Pendo = {
   },
 
   getVisitorHistory(token, visitorId, endDate) {
+    const [url, integrationKey] = this.getUrl(token);
     endDate.setHours(0); endDate.setMinutes(0); endDate.setSeconds(0); endDate.setMilliseconds(0);
     const starttime = endDate.getTime();
     return Rx.Observable.create((observer) => {
-      fetch(`${Pendo.url}/api/v1/visitor/${visitorId}/history?starttime=${starttime}`, {
+      fetch(`${url}/api/v1/visitor/${visitorId}/history?starttime=${starttime}`, {
         method: 'GET',
-        headers: {'X-Pendo-Integration-Key': token}
+        headers: {'X-Pendo-Integration-Key': integrationKey}
       })
         .then( checkStatus )
         .then( res => res.json() )
@@ -150,10 +177,11 @@ const Pendo = {
   },
 
   getPages(token) {
+    const [url, integrationKey] = this.getUrl(token);
     return Rx.Observable.create((observer) => {
-      fetch(`${Pendo.url}/api/v1/page`, {
+      fetch(`${url}/api/v1/page`, {
         method: 'GET',
-        headers: {'X-Pendo-Integration-Key': token}
+        headers: {'X-Pendo-Integration-Key': integrationKey}
       })
         .then( checkStatus )
         .then( res => res.json() )
@@ -166,10 +194,11 @@ const Pendo = {
   },
 
   getFeatures(token) {
+    const [url, integrationKey] = this.getUrl(token);
     return Rx.Observable.create((observer) => {
-      fetch(`${Pendo.url}/api/v1/feature`, {
+      fetch(`${url}/api/v1/feature`, {
         method: 'GET',
-        headers: {'X-Pendo-Integration-Key': token}
+        headers: {'X-Pendo-Integration-Key': integrationKey}
       })
         .then( checkStatus )
         .then( res => res.json() )
@@ -182,12 +211,13 @@ const Pendo = {
   },
 
   getGuides(token, ids) {
+    const [url, integrationKey] = this.getUrl(token);
     if (!ids.length) return Rx.Observable.of([]);
 
     return Rx.Observable.create((observer) => {
-      fetch(`${Pendo.url}/api/v1/guide?id=${ids.join(',')}`, {
+      fetch(`${url}/api/v1/guide?id=${ids.join(',')}`, {
         method: 'GET',
-        headers: {'X-Pendo-Integration-Key': token}
+        headers: {'X-Pendo-Integration-Key': integrationKey}
       })
         .then( checkStatus ) // if one isn't found then whole request errors
         .then( res => res.json() )
