@@ -33,9 +33,9 @@ const toLowerify = (mdFieldName) => {
   }
 }
 
-const Pendo = {
+var Pendo = {
 
-  url: process.env.REACT_APP_HOST_ENV === 'production' ? 'https://app.pendo.io' : 'https://pendo-dev.appspot.com',
+  url: process.env.REACT_APP_HOST_ENV === 'production' ? '' : 'https://pendo-dev.appspot.com',
 
   initialize (token) {
   //   // TODO: implement this to partially apply token once to all the functions here
@@ -44,7 +44,20 @@ const Pendo = {
     // R.map((key) => R.partial(Pendo[key], token), R.reject(R.equals('initialize'),R.keys(Pendo)))
   },
 
+  setUrl (token) {
+    if (Pendo.url === 'https://pendo-dev.appspot.com'){
+      return; //this is a dev env, don't change
+    }
+    var subIndex = token.lastIndexOf('.');
+    if (subIndex === -1) {
+      Pendo.url = 'https://app.pendo.io'; //default to us site
+    } else {
+      Pendo.url = `https://app.${token.substring(subIndex + 1)}.pendo.io`; // use integration key domain if present
+    }
+  },
+
   fetchUserById (token, email) {
+    this.setUrl(token);
     return Rx.Observable.create((observer) => {
       fetch(`${Pendo.url}/api/v1/visitor/${email}`, {
         method: 'GET',
@@ -61,6 +74,7 @@ const Pendo = {
   },
 
   findUsersByField (token, field, email) {
+    this.setUrl(token);
     field = toLowerify(field);
     return Rx.Observable.create((observer) => {
       fetch(`${Pendo.url}/api/v1/visitor/metadata/${field}/${email}`, {
@@ -80,6 +94,7 @@ const Pendo = {
   },
 
   findAccountStream (token, accountId) {
+    this.setUrl(token);
     return Rx.Observable.create((observer) => {
       fetch(`${Pendo.url}/api/v1/account/${accountId}`, {
         method: 'GET',
@@ -96,6 +111,7 @@ const Pendo = {
   },
 
   runAggregation (token, agg) {
+    this.setUrl(token);
     return Rx.Observable.create((observer) => {
       fetch(`${Pendo.url}/api/v1/aggregation`, {
         method: 'POST',
@@ -116,6 +132,7 @@ const Pendo = {
   },
 
   getMetadataSchema (token, type) {
+    this.setUrl(token);
     return Rx.Observable.create((observer) => {
       fetch(`${Pendo.url}/api/v1/metadata/schema/${type}`, {
         method: 'GET',
@@ -132,6 +149,7 @@ const Pendo = {
   },
 
   getVisitorHistory(token, visitorId, endDate) {
+    this.setUrl(token);
     endDate.setHours(0); endDate.setMinutes(0); endDate.setSeconds(0); endDate.setMilliseconds(0);
     const starttime = endDate.getTime();
     return Rx.Observable.create((observer) => {
@@ -150,6 +168,7 @@ const Pendo = {
   },
 
   getPages(token) {
+    this.setUrl(token);
     return Rx.Observable.create((observer) => {
       fetch(`${Pendo.url}/api/v1/page`, {
         method: 'GET',
@@ -166,6 +185,7 @@ const Pendo = {
   },
 
   getFeatures(token) {
+    this.setUrl(token);
     return Rx.Observable.create((observer) => {
       fetch(`${Pendo.url}/api/v1/feature`, {
         method: 'GET',
@@ -182,6 +202,7 @@ const Pendo = {
   },
 
   getGuides(token, ids) {
+    this.setUrl(token);
     if (!ids.length) return Rx.Observable.of([]);
 
     return Rx.Observable.create((observer) => {
