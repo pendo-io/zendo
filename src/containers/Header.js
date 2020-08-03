@@ -29,11 +29,18 @@ const Header = recycle({
           console.log("got click on change user link");
           return state;
         }),
+
       sources.select(IconButton)
         .addListener('onClick')
         .reducer((state) => {
-          window.open(`${Pendo.url}/visitor/${state.id}`, '_newtab');
+          window.open(`${Pendo.getUrl(state.token).url}/visitor/${state.id}`, '_newtab');
           return state;
+        }),
+
+        ZAF.getApiToken()
+        .reducer((state, token) => {
+            state.token = token;
+            return state;
         }),
 
       ZAF.getEmail()
