@@ -15,12 +15,14 @@ import ActionReportProblem   from 'material-ui/svg-icons/action/report-problem';
 import EditorInsertDriveFile from 'material-ui/svg-icons/editor/insert-drive-file';
 import MapsLocalOffer        from 'material-ui/svg-icons/maps/local-offer';
 import MapsMap               from 'material-ui/svg-icons/maps/map';
+import Flag                  from 'material-ui/svg-icons/content/flag';
 
 import dateformat from 'dateformat';
 
 import Streams from '../Streams';
 import ZAF     from '../sources/ZAFClient';
 import Storage from '../sources/Storage';
+import Pendo   from '../sources/PendoClient';
 
 import {
   PickTimelineDate,
@@ -33,7 +35,7 @@ const getTimeOfDay = (d) => dateformat(d, 'longTime')
 const lookupItem = (item, lookupMap) => {
   if (item.type === 'ticket') return "Ticket Submitted";
   try {
-    const id = item.pageId || item.featureId || item.guideId;
+    const id = Pendo.getItemId(item); 
     if (!lookupMap[item.type][id]) {
       return `unrecognized ${item.type}`;
     } else {
@@ -49,6 +51,7 @@ const getIcon = (type) => {
   if (type === 'page') return (<EditorInsertDriveFile/>);
   if (type === 'feature') return (<MapsLocalOffer/>);
   if (type === 'guide') return (<MapsMap/>);
+  if (type === 'trackType') return (<Flag/>);
   else return (<ActionReportProblem/>);
 }
 
@@ -76,7 +79,8 @@ const Timeline = recycle({
       ticket: {},
       page: {},
       feature: {},
-      guide: {}
+      guide: {},
+      trackType: {}
     }
   },
   update (sources) {
@@ -98,13 +102,12 @@ const Timeline = recycle({
             return state;
           }
 
-          const guides = models[0],
-            pages = models[1],
-            features = models[2];
+          const [guides, pages, features, tracks] = models;
 
-            guides.map((g) => state.lookup.guide[g.id] = g);
-            pages.map((p) => state.lookup.page[p.id] = p);
-            features.map((f) => state.lookup.feature[f.id] = f);
+          guides.map((g) => state.lookup.guide[g.id] = g);
+          pages.map((p) => state.lookup.page[p.id] = p);
+          features.map((f) => state.lookup.feature[f.id] = f);
+          tracks.map((t) => state.lookup.trackType[t.id] = t);
 
           return state;
         }),

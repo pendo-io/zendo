@@ -1,5 +1,5 @@
 {
-  "name": "Pendo (beta)",
+  "name": "Pendo",
   "author": {
     "name": "brec-c",
     "email": "help@pendo.io",
@@ -12,7 +12,7 @@
       "ticket_sidebar": "assets/index.html"
     }
   },
-  "version": "1.6",
+  "version": "1.6.2",
   "frameworkVersion": "2.0",
   "parameters": [
     {
