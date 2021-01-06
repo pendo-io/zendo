@@ -314,7 +314,8 @@ const Streams = {
             .map( (guides) => R.map(R.prop('guideId'), guides) )
             .flatMap( (guideIds) => Pendo.getGuides(token, guideIds) ),
           Pendo.getPages(token),
-          Pendo.getFeatures(token)
+          Pendo.getFeatures(token),
+          Pendo.getTrackTypes(token)
         )
       })
   })

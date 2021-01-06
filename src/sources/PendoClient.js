@@ -38,13 +38,12 @@ const Pendo = {
   prod: process.env.REACT_APP_HOST_ENV === 'production',
 
   initialize (token) {
-  //   // TODO: implement this to partially apply token once to all the functions here
-    // R.map((key) => R.partial(Pendo[key], token), ()R.filter(R.equals('initialize'),R.keys(Pendo)))
-    // R.map((key) => console.log(`applying ${token} to Pendo.${key}`), R.reject(R.equals('initialize'),R.keys(Pendo)))
-    // R.map((key) => R.partial(Pendo[key], token), R.reject(R.equals('initialize'),R.keys(Pendo)))
+    Pendo.getToken = () => token;
   },
 
   getUrl (token) {
+    token = token || Pendo.getToken();
+    
     if (Pendo.prod === false){
       const integrationKey = token.split('.')[0];
       return {
@@ -231,6 +230,27 @@ const Pendo = {
           observer.complete();
         })
     })
+  },
+
+  getTrackTypes(token) {
+    const {url, integrationKey} = this.getUrl(token);
+    return Rx.Observable.create((observer) => {
+      fetch(`${url}/api/v1/tracktype`, {
+        method: 'GET',
+        headers: {'X-Pendo-Integration-Key': integrationKey}
+      })
+        .then( checkStatus )
+        .then( res => res.json() )
+        .then( obj => {
+          observer.next(obj);
+          observer.complete();
+        })
+        .catch( err => observer.error(err) )
+    });
+  },
+  
+  getItemId(item) {
+    return item.pageId || item.featureId || item.guideId || item.trackTypeId;
   }
 };
 
@@ -242,8 +262,5 @@ Pendo.findAccountStream.propTypes = {
   accountId: PropTypes.string.isRequired,
   token: PropTypes.string.isRequired
 };
-// TODO: add propTypes for:
-// findUsersByField
-// runAggregation
 
 export default Pendo;

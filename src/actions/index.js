@@ -28,6 +28,6 @@ export const PickTimelineDate = (date) => {
 }
 
 export const TimelineItemTouchAction = (item) => {
-  const id = item.pageId || item.featureId || item.guideId;
-  window.open(`${Pendo.url}/${item.type}s/${id}`, '_newtab');
+  const id = Pendo.getItemId(item);
+  window.open(`${Pendo.getUrl().url}/${item.type}s/${id}`, '_newtab');
 }
