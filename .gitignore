@@ -24,5 +24,6 @@ yarn-error.log*
 zendesk-app/assets/**
 yarn.lock
 
+settings.yml
 .zat
  

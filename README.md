@@ -23,6 +23,21 @@ We have a developer account here https://d3v-pendosupport.zendesk.com/agent/dash
 You can get a free Zendesk account that is prefixed with a string like `d3v-` to indicate its a development account. It may be preferrable to use multiple
 or to use a shared login as membership is limited for developer accounts.
 
+### Local settings
+
+[ZAT documentation](https://github.com/zendesk/zendesk_apps_tools/blob/e01fce5c5745b0a047b0ca02c76ea094c4026f62/doc/tools.md#app-settings)
+
+On startup, The local ZAT server will interactively ask for the application
+settings (see `parameters` in `zendesk-app/manifest.json`). If you create
+a `settings.yml` file with the below **example** contents, the app will be
+started with those settings:
+
+```yml
+token: "<PENDO_INTEGRATION_KEY"
+pendo-lookup-field: "agent/email"
+enable-user-lookup-field: true
+```
+
 ## Testing
 
 Nothing to see here (or do); move along.
