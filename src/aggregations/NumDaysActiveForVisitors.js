@@ -12,7 +12,7 @@ const agg = {
     "pipeline": [
 			{
 				"source": {
-	        "events": {"eventClass":["web", "ios"]},
+	        "events": {"eventClass":["ui"]},
 					"timeSeries": {
     	    	"period": "dayRange",
       	  	"count": "%NUM_DAYS%",

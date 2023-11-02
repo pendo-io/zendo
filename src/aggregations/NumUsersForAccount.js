@@ -12,7 +12,7 @@ const agg = {
 				{
 					"source": {
 						"events": {
-							"eventClass": ["web", "ios"]
+							"eventClass": ["ui"]
 						},
             "timeSeries": {
               "period": "dayRange",
