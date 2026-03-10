@@ -16,8 +16,6 @@
     "fail": "failed to fetch information from the server"
   },
   "id": "ID",
-  "email": "brec@pendo.io",
-  "name": "Brec Carson",
   "role": "Role",
   "groups": "Groups"
 }
