@@ -14,12 +14,19 @@
   },
   "version": "1.6.4",
   "frameworkVersion": "2.0",
+  "domainWhitelist": ["{{setting.pendo-host}}"],
   "parameters": [
     {
-      "name":     "token",
+      "name":     "apiKey",
       "type":     "text",
       "required": true,
       "secure":   true
+    },
+    {
+      "name":     "pendo-host",
+      "type":     "text",
+      "required": true,
+      "secure":   false
     },
     {
       "name":     "pendo-lookup-field",

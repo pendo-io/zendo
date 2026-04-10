@@ -1,6 +1,5 @@
 import Rx from 'rxjs';
 import R from 'ramda';
-import Pendo from './PendoClient';
 import Storage from './Storage';
 
 const initZAF = R.memoize(() => {
@@ -80,8 +79,12 @@ const ZAF = {
     return ZAF.getContext().map( (ctx) => ctx.ticketId );
   },
 
-  getApiToken () {
-    return ZAF.getMetadata().map( (md) => md.settings.token );
+  getPendoHost () {
+    return ZAF.getMetadata().map( (md) => md.settings['pendo-host'] || 'app.pendo.io' );
+  },
+
+  getClient () {
+    return zaf$;
   },
 
   getIDLookupField () {
@@ -95,8 +98,6 @@ const ZAF = {
 zaf$.subscribe(resize, (e) => console.error(e) );
 ZAF.getTicketId()
   .subscribe(initStorage, console.error);
-
-ZAF.getApiToken().subscribe(Pendo.initialize);
 
 
 export default ZAF;
