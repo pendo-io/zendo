@@ -36,13 +36,14 @@ const Streams = {
 
     const obs = Rx.Observable.zip(
       ZAF.getEmail(),
-      ZAF.getApiToken(),
+      ZAF.getClient(),
+      ZAF.getPendoHost(),
       ZAF.getIDLookupField()
-    ).flatMap( ([email, token, field]) => {
+    ).flatMap( ([email, client, host, field]) => {
       lookup = field;
       return field === 'ID' || !field ?
-        Pendo.fetchUserById(token, email) :
-        Pendo.findUsersByField(token, field, email);
+        Pendo.fetchUserById(client, host, email) :
+        Pendo.findUsersByField(client, host, field, email);
     })
     .take(1) // or could reduce?
     .map((visitor) => {
@@ -73,16 +74,17 @@ const Streams = {
     const $ = new Rx.AsyncSubject();
 
     const obs = Rx.Observable.zip(
-      ZAF.getApiToken(),
+      ZAF.getClient(),
+      ZAF.getPendoHost(),
       Streams.getVisitorStream()
         .map((v) => {
           if (!v.accountIds)
             return null;
           return v.accountIds[0]
         })
-    ).flatMap( ([token, acctId]) => {
+    ).flatMap( ([client, host, acctId]) => {
       if (!acctId) throw Error('No account')
-      return Pendo.findAccountStream(token, acctId)
+      return Pendo.findAccountStream(client, host, acctId)
     })
     .subscribe(
       (n) => {
@@ -98,8 +100,8 @@ const Streams = {
 
   getMetadataSchema: R.memoize((type) => {
     const $ = new Rx.AsyncSubject();
-    const obs = ZAF.getApiToken()
-      .flatMap( (token) => Pendo.getMetadataSchema(token, type) )
+    const obs = Rx.Observable.zip(ZAF.getClient(), ZAF.getPendoHost())
+      .flatMap( ([client, host]) => Pendo.getMetadataSchema(client, host, type) )
       .subscribe(
         (n) => {
           $.next(n);
@@ -177,12 +179,13 @@ const Streams = {
   getNumUsers: R.memoize(() => {
     const $ = new Rx.AsyncSubject();
     const obs = Rx.Observable.zip(
-      ZAF.getApiToken(),
+      ZAF.getClient(),
+      ZAF.getPendoHost(),
       Streams.getAccountStream().map((a) => a.id)
     )
-      .flatMap(([token, acctId]) => {
+      .flatMap(([client, host, acctId]) => {
         const agg = NumUsers(acctId);
-        return Pendo.runAggregation(token, agg);
+        return Pendo.runAggregation(client, host, agg);
       }).reduce((acc, val) => {
         if (!acc.title) {
           acc.title = "Unique Users Last 30 Days";
@@ -214,12 +217,13 @@ const Streams = {
     const $ = new Rx.AsyncSubject();
 
     const obs = Rx.Observable.zip(
-      ZAF.getApiToken(),
+      ZAF.getClient(),
+      ZAF.getPendoHost(),
       Streams.getVisitorStream().map((v) => v.id)
     )
-      .flatMap( ([token, visitorId]) => {
+      .flatMap( ([client, host, visitorId]) => {
         const agg = NumFeaturesUsed(visitorId);
-        return Pendo.runAggregation(token, agg);
+        return Pendo.runAggregation(client, host, agg);
       }).reduce((acc, val) => {
         const fName = val["Feature Name"];
         if (!acc.title) {
@@ -254,12 +258,13 @@ const Streams = {
     const $ = new Rx.AsyncSubject();
 
     const obs = Rx.Observable.zip(
-      ZAF.getApiToken(),
+      ZAF.getClient(),
+      ZAF.getPendoHost(),
       Streams.getVisitorStream().map((v) => v.id)
     )
-      .flatMap( ([token, visitorId]) => {
+      .flatMap( ([client, host, visitorId]) => {
         const agg = NumDaysRequest(visitorId);
-        return Pendo.runAggregation(token, agg);
+        return Pendo.runAggregation(client, host, agg);
       }).reduce((acc, val) => {
         if (!acc.title) {
           acc.title = "Days Active Last 30 Days";
@@ -286,11 +291,12 @@ const Streams = {
   getVisitorHistory: R.memoize((date) => {
     const $ = new Rx.AsyncSubject();
     const obs = Rx.Observable.zip(
-      ZAF.getApiToken(),
+      ZAF.getClient(),
+      ZAF.getPendoHost(),
       Streams.getVisitorStream().map( (v) => v.id )
     )
-      .flatMap( ([token, visitorId]) => {
-        return Pendo.getVisitorHistory(token, visitorId, date);
+      .flatMap( ([client, host, visitorId]) => {
+        return Pendo.getVisitorHistory(client, host, visitorId, date);
       })
       .map(R.reverse)
       .catch( err => Rx.Observable.of(err) )
@@ -306,16 +312,16 @@ const Streams = {
   }),
 
   getPendoModels: R.memoize((date) => {
-    return ZAF.getApiToken()
-      .flatMap((token) => {
+    return Rx.Observable.zip(ZAF.getClient(), ZAF.getPendoHost())
+      .flatMap(([client, host]) => {
         return Rx.Observable.zip(
           Streams.getVisitorHistory(date)
             .map( (history) => R.filter(R.propEq('type', 'guide'), history) )
             .map( (guides) => R.map(R.prop('guideId'), guides) )
-            .flatMap( (guideIds) => Pendo.getGuides(token, guideIds) ),
-          Pendo.getPages(token),
-          Pendo.getFeatures(token),
-          Pendo.getTrackTypes(token)
+            .flatMap( (guideIds) => Pendo.getGuides(client, host, guideIds) ),
+          Pendo.getPages(client, host),
+          Pendo.getFeatures(client, host),
+          Pendo.getTrackTypes(client, host)
         )
       })
   })

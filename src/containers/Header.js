@@ -7,8 +7,6 @@ import IconButton from 'material-ui/IconButton';
 import Streams from '../Streams';
 import ZAF from '../sources/ZAFClient';
 
-import Pendo from '../sources/PendoClient';
-
 import '../styles/Header.css';
 
 const Header = recycle({
@@ -33,13 +31,13 @@ const Header = recycle({
       sources.select(IconButton)
         .addListener('onClick')
         .reducer((state) => {
-          window.open(`${Pendo.getUrl(state.token).url}/visitor/${state.id}`, '_newtab');
+          window.open(`https://${state.host}/visitor/${state.id}`, '_newtab');
           return state;
         }),
 
-        ZAF.getApiToken()
-        .reducer((state, token) => {
-            state.token = token;
+        ZAF.getPendoHost()
+        .reducer((state, host) => {
+            state.host = host;
             return state;
         }),
 
